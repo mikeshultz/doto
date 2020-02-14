@@ -1,0 +1,43 @@
+:root {
+    --bg: #000000;
+    --bg-secondary: #333333;
+    --fg: #CCCCCC;
+    --extreme: #FFCBCF;
+    --high: #FFEDCB;
+    --normal: #E5FFCB;
+    --low: #CBFCFF;
+}
+
+body {
+    background: var(--bg);
+    color: var(--fg);
+}
+.App {
+  padding: 0 2rem;
+}
+
+.hide {
+    display: none;
+}
+
+button {
+    min-width: 150px;
+    height: 3rem;
+}
+
+.button-group {
+    display: block;
+    clear: both;
+}
+.button-group button {
+    display: inline-block;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px #cfcfcf solid;
+}
+.button-group button:first-of-type {
+    border-radius: 5px 0 0 5px;
+}
+.button-group button:last-of-type {
+    border-radius: 0 5px 5px 0;
+}
