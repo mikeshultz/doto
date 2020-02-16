@@ -2,3 +2,4 @@ graphene>=2.1.8
 flask>=1.1.1
 Flask-GraphQL>=2.0.1
 flask-cors>=3.0.8
+waitress>=1.4.3

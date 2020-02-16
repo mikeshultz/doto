@@ -1,0 +1,11 @@
+[Unit]
+Description=doto
+After=network.target
+
+[Service]
+Environment=DOTO_PORT=8080
+Environment=FLASK_APP=doto.app
+ExecStart=waitress-serve --listen=*:${DOTO_PORT} ${FLASK_APP}:app
+
+[Install]
+WantedBy=multi-user.target
