@@ -9,4 +9,4 @@ print('Opening DB at {}'.format(SQLITE_PATH))
 
 
 def get_conn():
-    return sqlite3.connect(str(SQLITE_PATH), isolation_level=None)
+    return sqlite3.connect(str(SQLITE_PATH), isolation_level=None, check_same_thread=False)
