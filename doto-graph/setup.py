@@ -1,18 +1,47 @@
+import sys
+import shutil
 import doto
-from os import path
-from setuptools import setup, find_packages
 
-pwd = path.abspath(path.dirname(__file__))
+from pathlib import Path
+from setuptools import Command, setup, find_packages
+from subprocess import check_call, CalledProcessError
+
+this_dir = Path(__file__).parent.absolute()
 
 # Get the long description from the README file
-with open(path.join(pwd, 'README.md'), encoding='utf-8') as f:
+with this_dir.joinpath('README.md').open(encoding='utf-8') as f:
     long_description = f.read()
 
 
 def requirements_to_list(filename):
-    return [dep for dep in open(path.join(pwd, filename)).read().split('\n') if (
+    return [dep for dep in this_dir.joinpath(filename).open().read().split('\n') if (
         dep and not dep.startswith('#')
     )]
+
+
+class BuildFrontendCommand(Command):
+    """ Build the UI """
+    description = 'Build doto-ui'
+    user_options = [
+        ('version=', 'v', 'version of yarn'),
+    ]
+
+    def initialize_options(self):
+        self.version = '1.2.3'
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        if shutil.which('yarn') is None:
+            print('No yarn aavailable.')
+            return
+        try:
+            check_call([shutil.which('yarn'), 'build'], cwd=this_dir.parent.joinpath('doto-ui'))
+        except CalledProcessError as err:
+            if 'non-zero' in str(err):
+                print("extract failed", file=sys.stderr)
+                sys.exit(1)
 
 
 setup(
@@ -42,5 +71,8 @@ setup(
         '': [
             'README.md',
         ],
+    },
+    cmdclass={
+        'build_frontend': BuildFrontendCommand,
     }
 )
