@@ -34,10 +34,12 @@ class BuildFrontendCommand(Command):
 
     def run(self):
         if shutil.which('yarn') is None:
-            print('No yarn aavailable.')
+            print('No yarn available.')
             return
+        work_dir = this_dir.parent.joinpath('doto-ui')
         try:
-            check_call([shutil.which('yarn'), 'build'], cwd=this_dir.parent.joinpath('doto-ui'))
+            check_call([shutil.which('yarn')], cwd=work_dir)
+            check_call([shutil.which('yarn'), 'build'], cwd=work_dir)
         except CalledProcessError as err:
             if 'non-zero' in str(err):
                 print("extract failed", file=sys.stderr)
