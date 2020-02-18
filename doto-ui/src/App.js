@@ -25,7 +25,7 @@ function App() {
   const [modalState, setModalState] = useState(-1)
   return (
     <ApolloProvider client={client}>
-      <Router>
+      <Router forceRefresh={false}>
         <div className="App">
           <Switch>
             <Route path="/todo">

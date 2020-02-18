@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom"
 
 import './Home.css'
 
@@ -7,8 +8,8 @@ function Home(props) {
     <div id="home">
       <h1>Home</h1>
       <ul>
-        <li><a href="/todo">TODO</a></li>
-        <li><a href="/calendar">Calendar</a></li>
+        <li><Link to="/todo">TODO</Link></li>
+        <li><Link to="/calendar">Calendar</Link></li>
       </ul>
     </div>
   )

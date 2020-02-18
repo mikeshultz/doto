@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flask import Flask, escape, request
 from flask_graphql import GraphQLView
 from flask_cors import CORS
@@ -9,11 +10,15 @@ from doto.const import SPA_PATH
 app = Flask(__name__, static_folder=SPA_PATH)
 CORS(app)
 
+static_path = Path(SPA_PATH).expanduser().resolve()
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
     print('path:', path)
+    if not static_path.joinpath(path).is_file():
+        return app.send_static_file('index.html')
     return app.send_static_file(path or 'index.html')
 
 
