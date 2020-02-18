@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom"
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
 
+import Home from './pages/Home'
+import Calendar from './pages/Calendar'
 import Tasks from './pages/Tasks'
 import AddTaskButton from './components/AddTaskButton'
 
@@ -15,13 +23,24 @@ const client = new ApolloClient({
 function App() {
   // -1 don't display, ==0 empty modal, > 0 display that ID
   const [modalState, setModalState] = useState(-1)
-  console.log('modalState', modalState)
   return (
     <ApolloProvider client={client}>
-      <div className="App">
-        <Tasks modalState={modalState} taskModalState={setModalState} />
-        <AddTaskButton openModal={() => { setModalState(0) }} />
-      </div>
+      <Router>
+        <div className="App">
+          <Switch>
+            <Route path="/todo">
+              <Tasks modalState={modalState} taskModalState={setModalState} />
+              <AddTaskButton openModal={() => { setModalState(0) }} />
+            </Route>
+            <Route path="/calendar">
+              <Calendar />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     </ApolloProvider>
   )
 }
