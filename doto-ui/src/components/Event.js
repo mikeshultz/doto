@@ -3,6 +3,12 @@ import moment from 'moment'
 
 import './Event.css'
 
+function nl2br(v) {
+  return {
+    __html: v.replace(/\n/g, '<br />')
+  }
+}
+
 function Event(props) {
   const { name, description, begin, duration: rawDuration } = props.event
   const [expanded, setExpanded] = useState(false)
@@ -17,7 +23,7 @@ function Event(props) {
 
   // TODO: TZ?
   const when = moment.utc(begin)
-  console.log('event: ', props.event)
+
   return (
     <li className="event">
       <div onClick={() => setExpanded(!expanded)}>
@@ -26,8 +32,8 @@ function Event(props) {
         <div className="name">{name}</div>
       </div>
       <div className={`details${expanded ? '' : ' hide'}`}>
-          <div className="event-description">{description}</div>
-          <div className="exact-when">{when.toISOString()}</div>
+          <div className="event-description" dangerouslySetInnerHTML={nl2br(description)} />
+          <div className="exact-when">{when.local().format()}</div>
       </div>
     </li>
   )
