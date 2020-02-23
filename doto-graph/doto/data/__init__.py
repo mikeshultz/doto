@@ -4,6 +4,14 @@ from doto.data.conn import get_conn
 # noqa: F401
 from doto.data.utils import sync, datetime_to_timestamp, timestamp_to_datetime, date_json_to_db
 from doto.data.objects import Task
+# noqa: F401
+from doto.data.calendar import (
+    authorize_user_step1,
+    authorize_user_step2,
+    get_calendar,
+    get_calendars,
+    get_calendar_ids,
+)
 
 
 @sync

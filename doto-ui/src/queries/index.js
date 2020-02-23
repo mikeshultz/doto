@@ -79,3 +79,33 @@ mutation DeleteTask($taskId: ID!) {
   }
 }
 `
+
+export const GOOGLE_AUTH = gql`
+mutation GoogleAuth($calendarId: ID!) {
+  googleAuth(calendarId: $calendarId) {
+    ok
+    authUrl
+  }
+}
+`
+
+export const GET_CALENDARS = gql`
+query Calendars($calendarId: ID) {
+  calendars(calendarId: $calendarId) {
+    id
+    calendarId
+    url
+    name
+    events {
+      id
+      name
+      description
+      begin
+      duration
+      location
+      organizer
+      status
+    }
+  }
+}
+`

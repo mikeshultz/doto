@@ -14,6 +14,7 @@
     transition-property: max-height, border-width, padding;
     transition-duration: 1s;
 }
+.task.completed:before,
 .task.deleted:before {
   content: "";
   width: 100%;
@@ -55,7 +56,7 @@
     padding-right: 1rem;
 }
 .task .expand:before,
-.task .expand:after{
+.task .expand:after {
     background: var(--fg);
     content: '';
     height: 5px;

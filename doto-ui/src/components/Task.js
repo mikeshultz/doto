@@ -39,12 +39,13 @@ function Task(props) {
 
   const deletedTask = deleteData && deleteData.deleteTask ? deleteData.deleteTask.ok : null
   const completedTask = completeData ? completeData.task : null
+  console.log('completedTask:', completedTask)
   useEffect(() => {
     setTask({
       ...givenTask,
-      ...completedTask
+      //...completedTask
     })
-  }, [givenTask, completedTask])
+  }, [givenTask]) //, completedTask])
 
   const { taskId, priority, name, added, deadline, completed, notes } = task
   const now = +new Date()
@@ -55,6 +56,24 @@ function Task(props) {
   if (priority <= 30) priorityClass = 'normal'
   if (priority <= 20) priorityClass = 'high'
   if (priority <= 10) priorityClass = 'extreme'
+
+  function completeSelf() {
+    // Mutation
+    completeTask(taskId)
+
+    // Unexpand the element
+    setExpanded(false)
+
+    // Transition to a 0 element
+    setTimeout(() => {
+      setSquashed(true)
+    }, 1000)
+
+    // Refetch all tasks
+    setTimeout(() => {
+      props.refetchTasks()
+    }, 3000)
+  }
 
   function deleteSelf() {
     // Mutation
@@ -75,7 +94,7 @@ function Task(props) {
   }
 
   return (
-    <li className={`task ${priorityClass}${deletedTask ? ' deleted' : ''}${squashed ? ' squashed' : ''}`}>
+    <li className={`task ${priorityClass}${deletedTask ? ' deleted' : ''}${completedTask !== null ? ' completed' : ''}${squashed ? ' squashed' : ''}`}>
       <div onClick={() => setExpanded(!expanded)}>
         <div className={`expand${expanded ? '' : ' collapsed'}`}></div>
         {name}
@@ -96,7 +115,7 @@ function Task(props) {
         <div className="button-group">
           <button className="edit" onClick={() => props.taskModalState(taskId)}>Edit</button>
           <button className="delete" onClick={deleteSelf}>Delete</button>
-          <button className="complete" onClick={() => completeTask(taskId)}>Complete</button>
+          <button className="complete" onClick={completeSelf}>Complete</button>
         </div>
       </div>
     </li>

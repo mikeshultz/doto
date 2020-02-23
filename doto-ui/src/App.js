@@ -9,9 +9,9 @@ import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
 
 import Home from './pages/Home'
-import Calendar from './pages/Calendar'
+import Calendars from './pages/Calendars'
 import Tasks from './pages/Tasks'
-import AddTaskButton from './components/AddTaskButton'
+import AddButton from './components/AddButton'
 
 import './App.css'
 
@@ -22,18 +22,20 @@ const client = new ApolloClient({
 
 function App() {
   // -1 don't display, ==0 empty modal, > 0 display that ID
-  const [modalState, setModalState] = useState(-1)
+  const [taskModalState, setTaskModalState] = useState(-1)
+  const [calendarModalState, setCalendarModalState] = useState(-1)
   return (
     <ApolloProvider client={client}>
       <Router forceRefresh={false}>
         <div className="App">
           <Switch>
             <Route path="/todo">
-              <Tasks modalState={modalState} taskModalState={setModalState} />
-              <AddTaskButton openModal={() => { setModalState(0) }} />
+              <Tasks modalState={taskModalState} taskModalState={setTaskModalState} />
+              <AddButton openModal={() => { setTaskModalState(0) }} />
             </Route>
             <Route path="/calendar">
-              <Calendar />
+              <Calendars modalState={calendarModalState} setModalState={setCalendarModalState} />
+              <AddButton openModal={() => { setCalendarModalState(0) }} />
             </Route>
             <Route path="/">
               <Home />

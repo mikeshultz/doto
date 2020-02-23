@@ -1,42 +1,16 @@
 from datetime import datetime
-from graphene import Mutation, ID, ObjectType, Field, Boolean, String, Schema, List, Int, DateTime
+from graphene import Mutation, ID, Field, Boolean, String, Int
 
-from doto.data import create_task, update_task, delete_task, get_task, get_tasks, complete_task
-
-
-class Task(ObjectType):
-    id = ID()
-    task_id = ID()
-    priority = Int()
-    name = String()
-    notes = String()
-    added = DateTime()
-    deadline = DateTime()
-    completed = DateTime()
-
-    def resolve_id(parent, info):
-        return parent.task_id
-
-    def resolve_task_id(parent, info):
-        return parent.task_id
-
-    def resolve_priority(parent, info):
-        return parent.priority
-
-    def resolve_name(parent, info):
-        return f"{parent.name}"
-
-    def resolve_notes(parent, info):
-        return parent.notes
-
-    def resolve_added(parent, info):
-        return parent.added
-
-    def resolve_deadline(parent, info):
-        return parent.deadline
-
-    def resolve_completed(parent, info):
-        return parent.completed
+from doto.data import (
+    create_task,
+    update_task,
+    delete_task,
+    get_task,
+    complete_task,
+    authorize_user_step1,
+    authorize_user_step2
+)
+from doto.schema.objects import Task
 
 
 class CreateTask(Mutation):
@@ -114,22 +88,13 @@ class UpdateTask(Mutation):
         return UpdateTask(ok=ok, task=task)
 
 
-class Query(ObjectType):
-    task = Field(Task, task_id=ID(required=True))
-    tasks = List(Task)
+class GoogleAuth(Mutation):
+    class Arguments:
+        calendar_id = ID(required=True)
 
-    def resolve_task(root, info, task_id):
-        return get_task(task_id)
+    ok = Boolean()
+    auth_url = String()
 
-    def resolve_tasks(root, info):
-        return get_tasks()
-
-
-class Mutation(ObjectType):
-    create_task = CreateTask.Field()
-    complete_task = CompleteTask.Field()
-    update_task = UpdateTask.Field()
-    delete_task = DeleteTask.Field()
-
-
-schema = Schema(query=Query, mutation=Mutation)
+    def mutate(parent, info, calendar_id):
+        auth_url = authorize_user_step1(calendar_id)
+        return GoogleAuth(ok=True, auth_url=auth_url)
