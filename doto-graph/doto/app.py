@@ -9,7 +9,15 @@ from doto.schema import schema
 from doto.const import SPA_PATH
 
 app = Flask(__name__, static_folder=str(SPA_PATH))
-CORS(app, origins=['http://localhost:8081', 'http://localhost:3000'])
+CORS(
+    app,
+    origins=[
+        'http://localhost:8081',
+        'http://localhost:3000',
+        'http://doto.mikes.network',
+        'https://doto.mikes.network'
+    ]
+)
 
 
 @app.route('/google-auth')
