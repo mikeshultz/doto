@@ -28,12 +28,12 @@ function ColoredTemp(props) {
 }
 
 function Forecast(props) {
-  const points = props.points.map(point => {
+  const points = props.points ? props.points.map(point => {
     const time = moment(point.datetime)
     return <li>
       {time.fromNow()} | <ColoredTemp temp={point.main.temp} />
     </li>
-  })
+  }) : []
 
   return (
     <ul id="forecast">
