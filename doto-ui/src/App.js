@@ -11,6 +11,7 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import Home from './pages/Home'
 import Calendars from './pages/Calendars'
 import Tasks from './pages/Tasks'
+import Weather from './pages/Weather'
 import AddButton from './components/AddButton'
 
 import './App.css'
@@ -36,6 +37,9 @@ function App() {
             <Route path="/calendar">
               <Calendars modalState={calendarModalState} setModalState={setCalendarModalState} />
               <AddButton openModal={() => { setCalendarModalState(0) }} />
+            </Route>
+            <Route path="/weather">
+              <Weather />
             </Route>
             <Route path="/">
               <Home />

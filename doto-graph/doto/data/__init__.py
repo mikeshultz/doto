@@ -12,6 +12,7 @@ from doto.data.calendar import (
     get_calendars,
     get_calendar_ids,
 )
+from doto.data.weather import get_forecast
 
 
 @sync

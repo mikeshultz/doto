@@ -1,5 +1,5 @@
 import sys
-from graphene import ID, Schema, ObjectType, Field, List
+from graphene import ID, Schema, ObjectType, Field, List, Int, String
 
 from doto.data import (
     get_task,
@@ -7,7 +7,9 @@ from doto.data import (
     get_calendars,
     get_calendar_ids,
     get_calendar,
+    get_forecast,
 )
+from doto.const import DEFAULT_ZIP, DEFAULT_COUNTRY_CODE
 from doto.schema.mutations import (
     CreateTask,
     CompleteTask,
@@ -15,13 +17,14 @@ from doto.schema.mutations import (
     DeleteTask,
     GoogleAuth,
 )
-from doto.schema.objects import Task, Calendar
+from doto.schema.objects import Task, Calendar, OWMForecast
 
 
 class Query(ObjectType):
     task = Field(Task, task_id=ID(required=True))
     tasks = List(Task)
     calendars = List(Calendar, calendar_id=ID())
+    forecast = Field(OWMForecast, zip=Int(), country_code=String())
 
     def resolve_task(root, info, task_id):
         return get_task(task_id)
@@ -38,6 +41,9 @@ class Query(ObjectType):
                 continue
             calendars.extend(get_calendar(id))
         return calendars
+
+    def resolve_forecast(root, info, zip=DEFAULT_ZIP, country_code=DEFAULT_COUNTRY_CODE):
+        return get_forecast(zip, country_code)
 
 
 class Mutation(ObjectType):

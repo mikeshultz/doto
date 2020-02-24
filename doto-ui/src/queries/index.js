@@ -109,3 +109,44 @@ query Calendars($calendarId: ID) {
   }
 }
 `
+
+export const GET_FORECAST = gql`
+query Forecast($zip: Int, $countryCode: String) {
+  forecast(zip: $zip, countryCode: $countryCode) {
+    city {
+      name
+      coord {
+        lat
+        long
+      }
+      country
+    }
+    points {
+      datetime
+      main {
+        temp
+        tempMin
+        tempMax
+        pressure
+        seaLevel
+        grndLevel
+        humidity
+        tempKf
+      }
+      weather {
+        main
+        description
+        icon
+      }
+      clouds {
+        all
+      }
+      wind {
+        speed
+        deg
+      }
+    }
+  }
+}
+
+`
