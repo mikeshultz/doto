@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
 import { TASKS } from '../queries'
@@ -7,8 +7,26 @@ import TaskModal from '../components/TaskModal'
 
 import './Tasks.css'
 
+const TASK_REFETCH_INTERVAL = 1800000 // 30m
+
 function Tasks(props) {
+  const [refreshInterval, setRefreshInterval] = useRef(null)
   const { loading, error, data, refetch } = useQuery(TASKS)
+
+  useEffect(() => {
+    // refetch every 30min
+    const interval = setInterval(() => {
+      if (!loading) refetch()
+    }, TASK_REFETCH_INTERVAL)
+
+    setRefreshInterval(interval)
+
+    return () => {
+      // Cleanup interval on unmount
+      clearInterval(refreshInterval)
+      setRefreshInterval(null)
+    }
+  })
 
   if (loading) return <p>Loading...</p>
   if (error) {

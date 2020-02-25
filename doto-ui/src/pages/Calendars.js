@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
 import { GET_CALENDARS } from '../queries'
@@ -7,9 +7,27 @@ import AddCalendarModal from '../components/AddCalendarModal'
 
 import './Calendars.css'
 
+const CALENDAR_REFETCH_INTERVAL = 900000 // 15m
+
 function Calendars(props) {
   const { modalState, setModalState } = props
+  const [refreshInterval, setRefreshInterval] = useRef(null)
   const { loading, error, data, refetch } = useQuery(GET_CALENDARS)
+
+  useEffect(() => {
+    // refetch every 30min
+    const interval = setInterval(() => {
+      if (!loading) refetch()
+    }, CALENDAR_REFETCH_INTERVAL)
+
+    setRefreshInterval(interval)
+
+    return () => {
+      // Cleanup interval on unmount
+      clearInterval(refreshInterval)
+      setRefreshInterval(null)
+    }
+  })
 
   console.log('######modalState', modalState)
 
