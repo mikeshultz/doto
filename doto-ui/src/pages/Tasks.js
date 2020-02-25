@@ -10,21 +10,17 @@ import './Tasks.css'
 const TASK_REFETCH_INTERVAL = 1800000 // 30m
 
 function Tasks(props) {
-  const [refreshInterval, setRefreshInterval] = useRef(null)
+  const refreshInterval = useRef(null)
   const { loading, error, data, refetch } = useQuery(TASKS)
 
   useEffect(() => {
     // refetch every 30min
-    const interval = setInterval(() => {
+    refreshInterval.current = setInterval(() => {
       if (!loading) refetch()
     }, TASK_REFETCH_INTERVAL)
 
-    setRefreshInterval(interval)
-
     return () => {
-      // Cleanup interval on unmount
-      clearInterval(refreshInterval)
-      setRefreshInterval(null)
+      clearInterval(refreshInterval.current)
     }
   })
 

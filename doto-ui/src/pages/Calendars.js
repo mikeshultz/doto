@@ -11,21 +11,17 @@ const CALENDAR_REFETCH_INTERVAL = 900000 // 15m
 
 function Calendars(props) {
   const { modalState, setModalState } = props
-  const [refreshInterval, setRefreshInterval] = useRef(null)
+  const refreshInterval = useRef(null)
   const { loading, error, data, refetch } = useQuery(GET_CALENDARS)
 
   useEffect(() => {
     // refetch every 30min
-    const interval = setInterval(() => {
+    refreshInterval.current = setInterval(() => {
       if (!loading) refetch()
     }, CALENDAR_REFETCH_INTERVAL)
 
-    setRefreshInterval(interval)
-
     return () => {
-      // Cleanup interval on unmount
-      clearInterval(refreshInterval)
-      setRefreshInterval(null)
+      clearInterval(refreshInterval.current)
     }
   })
 
