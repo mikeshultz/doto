@@ -96,7 +96,7 @@ def credentials_to_dict(c, **kwargs):
 
 def dict_to_credentials(d):
     return Credentials(
-        token=d['token'],
+        token=d.get('token'),
         refresh_token=d.get('refresh_token'),
         id_token=d.get('id_token'),
         token_uri=d.get('token_uri'),
