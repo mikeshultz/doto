@@ -2,12 +2,11 @@ import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
 import { GET_CALENDARS } from '../queries'
+import { CALENDAR_REFETCH_INTERVAL } from '../const'
 import Calendar from '../components/Calendar'
 import AddCalendarModal from '../components/AddCalendarModal'
 
 import './Calendars.css'
-
-const CALENDAR_REFETCH_INTERVAL = 900000 // 15m
 
 function Calendars(props) {
   const { modalState, setModalState } = props
@@ -59,7 +58,8 @@ function Calendars(props) {
   console.log('calendars:', data.calendars)
 
   const calendars = data.calendars.map(cal => {
-    return <Calendar key={cal.url} calendar={cal} />
+    console.log('rendering calendar: ', cal.id)
+    return <Calendar key={cal.id} calendar={cal} />
   })
 
   return (

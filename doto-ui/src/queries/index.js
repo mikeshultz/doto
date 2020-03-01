@@ -93,21 +93,58 @@ export const GET_CALENDARS = gql`
 query Calendars($calendarId: ID) {
   calendars(calendarId: $calendarId) {
     id
-    calendarId
-    url
-    name
-    events {
-      id
-      name
-      description
-      begin
-      duration
-      location
-      organizer
-      status
+    summary
+    description
+    selected
+  }
+}
+
+`
+
+export const GET_EVENTS = gql`
+query Events($calendarId: ID!) {
+  events(calendarId: $calendarId) {
+    id
+    status
+    created
+    updated
+    summary
+    description
+    colorId
+    creator {
+      email
+      displayName
+    }
+    organizer {
+      email
+      displayName
+    }
+    start {
+      date
+      datetime
+      timezone
+    }
+    end {
+      date
+      datetime
+      timezone
+    }
+    originalStartTime {
+      date
+      datetime
+      timezone
+    }
+    recurringEventId
+    reminders {
+      useDefault
+      overrides {
+        method
+        minutes
+      }
     }
   }
 }
+
 `
 
 export const GET_FORECAST = gql`

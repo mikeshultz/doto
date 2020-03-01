@@ -8,9 +8,10 @@ from doto.data.objects import Task
 from doto.data.calendar import (
     authorize_user_step1,
     authorize_user_step2,
-    get_calendar,
     get_calendars,
+    get_all_calendars,
     get_calendar_ids,
+    get_events,
 )
 from doto.data.weather import get_forecast
 

@@ -2,8 +2,9 @@ import sys
 import arrow
 from datetime import datetime, timedelta
 from ics import Calendar as iCal
-from graphene import ID, ObjectType, String, Int, DateTime, List, Float, Field
+from graphene import ID, ObjectType, String, Int, Date, DateTime, List, Float, Field, Boolean
 from doto.data.weather import parse_owm_date
+from doto.utils import is_date_or_none, iso_datetime_or_none
 
 
 class Task(ObjectType):
@@ -41,6 +42,168 @@ class Task(ObjectType):
         return parent.completed
 
 
+class GoogleUser(ObjectType):
+    email = String()
+    display_name = String()
+    is_self = Boolean()
+
+    def resolve_email(parent, info):
+        return parent.get('email')
+
+    def resolve_display_name(parent, info):
+        return parent.get('displayName')
+
+    def resolve_is_self(parent, info):
+        return parent.get('self')
+
+
+class GoogleDate(ObjectType):
+    date = Date()
+    datetime = DateTime()
+    timezone = String()
+
+    def resolve_date(parent, info):
+        return is_date_or_none(parent.get('date'))
+
+    def resolve_datetime(parent, info):
+        return iso_datetime_or_none(parent.get('dateTime'))
+
+    def resolve_timezone(parent, info):
+        return parent.get('timeZone')
+
+
+class GoogleRemindersOverrides(ObjectType):
+    method = String()
+    minutes = Int()
+
+    def resolve_method(parent, info):
+        return parent.get('method')
+
+    def resolve_minutes(parent, info):
+        return parent.get('minutes')
+
+
+class GoogleReminders(ObjectType):
+    use_default = Boolean()
+    overrides = List(GoogleRemindersOverrides)
+
+    def resolve_use_default(parent, info):
+        return parent.get('useDefault')
+
+    def resolve_overrides(parent, info):
+        return parent.get('overrides')
+
+
+class GoogleEvent(ObjectType):
+    id = ID()
+    status = String()
+    created = String()
+    updated = String()
+    summary = String()
+    description = String()
+    location = String()
+    color_id = String()
+    creator = Field(GoogleUser)
+    organizer = Field(GoogleUser)
+    start = Field(GoogleDate)
+    end = Field(GoogleDate)
+    original_start_time = Field(GoogleDate)
+    recurring_event_id = String()
+    reminders = Field(GoogleReminders)
+
+    def resolve_id(parent, info):
+        return parent.get('id')
+
+    def resolve_status(parent, info):
+        return parent.get('status')
+
+    def resolve_created(parent, info):
+        return parent.get('created')
+
+    def resolve_updated(parent, info):
+        return parent.get('updated')
+
+    def resolve_summary(parent, info):
+        return parent.get('summary')
+
+    def resolve_description(parent, info):
+        return parent.get('description')
+
+    def resolve_location(parent, info):
+        return parent.get('location')
+
+    def resolve_color_id(parent, info):
+        return parent.get('colorId')
+
+    def resolve_creator(parent, info):
+        print('creator resolver!!!!!', parent.get('creator'))
+        return parent.get('creator')
+
+    def resolve_organizer(parent, info):
+        return parent.get('organizer')
+
+    def resolve_start(parent, info):
+        return parent.get('start')
+
+    def resolve_end(parent, info):
+        return parent.get('end')
+
+    def resolve_original_start_time(parent, info):
+        return parent.get('originalStartTime')
+
+    def resolve_recurring_event_id(parent, info):
+        return parent.get('recurringEventId')
+
+    def resolve_reminders(parent, info):
+        return parent.get('reminders')
+
+
+class GoogleCalendar(ObjectType):
+    id = ID()
+    summary = String()
+    description = String()
+    timezone = String()
+    color_id = String()
+    background_color = String()
+    foreground_color = String()
+    selected = Boolean()
+    access_role = Boolean()
+    primary = Boolean()
+    # events = List(GoogleEvent)
+    # defaultReminders
+    # notificationSettings
+
+    def resolve_id(parent, info):
+        return parent.get('id')
+
+    def resolve_summary(parent, info):
+        return parent.get('summary')
+
+    def resolve_description(parent, info):
+        return parent.get('description')
+
+    def resolve_timezone(parent, info):
+        return parent.get('timeZone')
+
+    def resolve_color_id(parent, info):
+        return parent.get('colorId')
+
+    def resolve_background_color(parent, info):
+        return parent.get('backgroundColor')
+
+    def resolve_foreground_color(parent, info):
+        return parent.get('foregroundColor')
+
+    def resolve_selected(parent, info):
+        return parent.get('selected')
+
+    def resolve_access_role(parent, info):
+        return parent.get('accessTole')
+
+    def resolve_primary(parent, info):
+        return parent.get('primary')
+
+
 class Event(ObjectType):
     id = ID()
     event_id = ID()
@@ -53,6 +216,9 @@ class Event(ObjectType):
     organizer = String()
     status = String()
     begin = String()
+    end = String()
+    created = String()
+    last_modified = String()
 
     def resolve_id(parent, info):
         return parent.url
@@ -84,6 +250,15 @@ class Event(ObjectType):
     def resolve_begin(parent, info):
         return parent.begin
 
+    def resolve_end(parent, info):
+        return parent.end
+
+    def resolve_created(parent, info):
+        return parent.created
+
+    def resolve_last_modified(parent, info):
+        return parent.last_modified
+
 
 class Calendar(ObjectType):
     id = ID()
@@ -113,23 +288,16 @@ class Calendar(ObjectType):
             start = arrow.get(start)
 
         if end is None:
-            end = arrow.get(start + timedelta(days=2))
+            end = arrow.get(start + timedelta(days=7))
         else:
             end = arrow.get(end)
 
-        print('date_search start: ', start)
-        print('date_search end: ', end)
         for p in parent.date_search(start, end):
             try:
                 c = iCal(p.data)
                 if c.events is not None:
                     for ev in c.events:
                         ev.url = p.url
-                        print('dv: ', dir(ev))
-                        print('ev.begin: ', ev.begin)
-                        print('ev.end: ', type(ev.end))
-                        print('ev.time_equals: ', ev.time_equals)
-                        # caldav filtering seems to be wrong?
                         if ev.begin >= start and ev.begin <= end:
                             events.append(ev)
             except Exception as err:
@@ -245,8 +413,8 @@ class OWMPoint(ObjectType):
     weather = List(OWMPointWeather)
     clouds = Field(OWMPointClouds)
     wind = Field(OWMPointWind)
-    #rain = Field(OWMPointRain)
-    #sys = Feild()
+    # rain = Field(OWMPointRain)
+    # sys = Feild()
 
     def resolve_dt(parent, info):
         return parent.get('dt')
