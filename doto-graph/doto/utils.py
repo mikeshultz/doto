@@ -1,9 +1,10 @@
 import re
 import sys
 from datetime import date, datetime
+from dateutil import tz
+from dateutil.parser import parse
 
 ENABLE_PYTHON_37 = False
-ISO8601_DATE_PATTERN = r'^([0-9]{4})\-([0-9]{2})\-([0-9]{2})$'
 
 
 def any_falsey(iterable):
@@ -24,25 +25,20 @@ def uniq(iter, func):
 
 
 def iso_datetime_or_none(v):
-    try:
-        return datetime.fromisoformat(v)
-    except (ValueError, TypeError):
-        return None
-
-
-def is_date_or_none(v):
+    """ Parse an ISO 8601 string datetime or return None """
     if not v:
         return None
 
-    # date.fromisoformat introduced in Python 3.7
-    if sys.hexversion >= 0x3070000 and ENABLE_PYTHON_37:
-        try:
-            return date.fromisoformat(v)
-        except (ValueError, TypeError):
-            pass
-    else:
-        match = re.match(ISO8601_DATE_PATTERN, v)
-        if match is not None:
-            return date(match.group(1), match.group(2), match.group(3))
+    return parse(v)
+
+
+def is_date_or_none(v):
+    """ Parse an ISO 8601 string date or return None """
+    if not v:
+        return None
+
+    d = parse(v)
+    if d:
+        return d.date()
 
     return None
