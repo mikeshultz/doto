@@ -14,7 +14,7 @@ function Calendars(props) {
   const { loading, error, data, refetch } = useQuery(GET_CALENDARS)
 
   useEffect(() => {
-    // refetch every 30min
+    // refetch every CALENDAR_REFETCH_INTERVAL
     refreshInterval.current = setInterval(() => {
       if (!loading) refetch()
     }, CALENDAR_REFETCH_INTERVAL)
@@ -23,8 +23,6 @@ function Calendars(props) {
       clearInterval(refreshInterval.current)
     }
   })
-
-  console.log('######modalState', modalState)
 
   if (loading) return <p>Loading...</p>
   if (error && !data && !error.message.includes('Unauthorized')) {
@@ -54,8 +52,6 @@ function Calendars(props) {
       <AddCalendarModal modalState={modalState} setModalState={setModalState} />
     </div>
   }
-
-  console.log('calendars:', data.calendars)
 
   const calendars = data.calendars.map(cal => {
     console.log('rendering calendar: ', cal.id)

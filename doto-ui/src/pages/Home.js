@@ -10,6 +10,7 @@ function Home(props) {
       <ul>
         <li><Link to="/todo">TODO</Link></li>
         <li><Link to="/calendar">Calendar</Link></li>
+        <li><Link to="/weather">Weather</Link></li>
       </ul>
     </div>
   )

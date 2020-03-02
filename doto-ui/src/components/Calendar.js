@@ -19,7 +19,7 @@ function Calendar(props) {
 
   // TODO: Is this redundant with Calnedars page?
   useEffect(() => {
-    // refetch every 30min
+    // refetch every CALENDAR_REFETCH_INTERVAL
     refreshInterval.current = setInterval(() => {
       if (!loading) refetch()
     }, CALENDAR_REFETCH_INTERVAL)

@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import moment from 'moment'
+import Chart from 'chart.js'
 
 import './Forecast.css'
+
+function getTempColor(temp, alpha='0.5') {
+  if (temp > 80) {
+    //return '#FFD46D'
+    return `rgba(255,212,109,${alpha})`
+  } else if (temp > 60) {
+    //return '#FFD46D'
+    return `rgba(255,212,109,${alpha})`
+  } else if (temp > 40) {
+    //return '#9DFF6D'
+    return `rgba(157,255,109,${alpha})`
+  } else if (temp > 20) {
+    //return '#6DFFED'
+    return `rgba(109,255,237,${alpha})`
+  } else if (temp > 0) {
+    //return '#6DC8FF'
+    return `rgba(109,200,255,${alpha})`
+  }
+  //return '#ffffff'
+  return `rgba(255,255,255,${alpha})`
+}
 
 function ColoredTemp(props) {
   console.log('temp: ', props.temp)
@@ -28,17 +50,65 @@ function ColoredTemp(props) {
 }
 
 function Forecast(props) {
-  const points = props.points ? props.points.map(point => {
+  const labels = []
+  let maxAlpha = 0.5
+  let pointCount = 0
+  let pointSum = 0
+  let avgTemp = 0
+  let avgColor = getTempColor(avgTemp)
+  const dataPoints = []
+  const borderColors = []
+  const backgroundColors = []
+
+  for (const point of props.points) {
     const time = moment(point.datetime)
-    return <li>
-      {time.fromNow()} | <ColoredTemp temp={point.main.temp} />
-    </li>
-  }) : []
+
+    // Chart data
+    pointCount += 1
+    pointSum += point.main.temp
+    labels.push(time.format("ddd, hA"))
+    dataPoints.push(point.main.temp)
+    borderColors.push(getTempColor(point.main.temp))
+    const pointAlpha = maxAlpha - (pointCount * 0.01)
+    console.log('pointAlpha:', pointAlpha)
+    backgroundColors.push(getTempColor(point.main.temp, pointAlpha))
+  }
+
+  if (pointCount > 0) {
+    avgTemp = pointSum / pointCount
+    avgColor = getTempColor(avgTemp, '0.2')
+  }
+
+  useEffect(() => {
+    const el = document.getElementById('forecastchart')
+    const ctx = el.getContext('2d')
+    /*const gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
+    backgroundColors.forEach((col, idx) => {
+      console.log(`idx: ${idx} - col: ${col}`)
+      gradientFill.addColorStop(idx, col)
+    })*/
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: dataPoints,
+          //backgroundColor: gradientFill, //backgroundColors, //avgColor, //'rgba(64,64,64,0.5)', //backgroundColors,
+          backgroundColor: avgColor,
+          borderColor: borderColors,
+          borderWidth: 1
+        }],
+      },
+      options: {
+        legend: {
+          display: false
+        }
+      }
+    })
+  })
 
   return (
-    <ul id="forecast">
-      {points}
-    </ul>
+    <canvas id="forecastchart"></canvas>
   )
 }
 
