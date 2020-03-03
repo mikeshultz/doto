@@ -136,7 +136,6 @@ class GoogleEvent(ObjectType):
         return parent.get('colorId')
 
     def resolve_creator(parent, info):
-        print('creator resolver!!!!!', parent.get('creator'))
         return parent.get('creator')
 
     def resolve_organizer(parent, info):

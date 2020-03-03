@@ -102,7 +102,7 @@ query Calendars($calendarId: ID) {
 `
 
 export const GET_EVENTS = gql`
-query Events($calendarId: ID!) {
+query Events($calendarId: ID) {
   events(calendarId: $calendarId) {
     id
     status

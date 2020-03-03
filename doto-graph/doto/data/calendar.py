@@ -21,6 +21,18 @@ CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 # ]
 
 
+def get_ev_start(ev):
+    retval = None
+
+    if ev.get('start'):
+        retval = ev['start'].get('date') or ev['start'].get('dateTime')
+    print('start retval:', retval)
+    if retval is not None:
+        return retval
+
+    return 'zzz'
+
+
 class OAuth(AuthBase):
     def __init__(self, credentials):
         self.credentials = credentials
@@ -232,43 +244,56 @@ def get_calendars(calendar_id):
     return calendars
 
 
-def get_events(calendar_id): #, user_id=None):
+def get_events(calendar_id=None): #, user_id=None):
     """ Get a full calendar data from Google """
     global TOKEN_CACHE
 
     if TOKEN_CACHE is None:
         load_credentials()
 
-    if calendar_id not in TOKEN_CACHE:
+    if calendar_id is not None and calendar_id not in TOKEN_CACHE:
         print('!!!! auth needs to be done')
         return authorize_user_step1(calendar_id)
 
-    expires_at = TOKEN_CACHE[calendar_id].get('expires_at')
-    credentials = dict_to_credentials(TOKEN_CACHE[calendar_id])
-    if expires_at and datetime.fromtimestamp(expires_at) < datetime.now():
-        print('Credentials expired for calendar {}. Attempting to refresh credentials...'.format(
-            calendar_id
-        ))
-        credentials.refresh(Request())
-        TOKEN_CACHE[calendar_id] = credentials_to_dict(credentials)
-        save_credentials()
-    service = build('calendar', 'v3', credentials=credentials)
+    calendars = []
+    events = []
+    if calendar_id is not None:
+        calendars.append(calendar_id)
+    else:
+        calendars.extend(TOKEN_CACHE.keys())
 
-    min_datetime = '{}Z'.format(datetime.utcnow().isoformat(timespec='seconds'))
-    max_datetime = '{}Z'.format(
-        (datetime.utcnow() + timedelta(days=7)).replace(
-            hour=23,
-            minute=59,
-            second=59
-        ).isoformat(timespec='seconds')
-    )
+    for cal_id in calendars:
+        expires_at = TOKEN_CACHE[cal_id].get('expires_at')
+        credentials = dict_to_credentials(TOKEN_CACHE[cal_id])
+        if expires_at and datetime.fromtimestamp(expires_at) < datetime.now():
+            print('Credentials expired for calendar {}. Attempting to refresh credentials...'.format(
+                cal_id
+            ))
+            credentials.refresh(Request())
+            TOKEN_CACHE[cal_id] = credentials_to_dict(credentials)
+            save_credentials()
+        service = build('calendar', 'v3', credentials=credentials)
 
-    events_result = service.events().list(
-        calendarId=calendar_id,
-        timeMin=min_datetime,
-        timeMax=max_datetime,
-        maxResults=10,
-        singleEvents=True,
-        orderBy='startTime'
-    ).execute()
-    return events_result.get('items', [])
+        min_datetime = '{}Z'.format(datetime.utcnow().isoformat(timespec='seconds'))
+        max_datetime = '{}Z'.format(
+            (datetime.utcnow() + timedelta(days=7)).replace(
+                hour=23,
+                minute=59,
+                second=59
+            ).isoformat(timespec='seconds')
+        )
+
+        events_result = service.events().list(
+            calendarId=cal_id,
+            timeMin=min_datetime,
+            timeMax=max_datetime,
+            maxResults=10,
+            singleEvents=True,
+            orderBy='startTime'
+        ).execute()
+        events.extend(events_result.get('items', []))
+
+    # Need to sort the events
+    sorted_events = sorted(events, key=get_ev_start)
+
+    return sorted_events
