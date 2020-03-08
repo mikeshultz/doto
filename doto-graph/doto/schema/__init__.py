@@ -24,7 +24,7 @@ class Query(ObjectType):
     task = Field(Task, task_id=ID(required=True))
     tasks = List(Task)
     calendars = List(GoogleCalendar, calendar_id=ID())
-    events = List(GoogleEvent, calendar_id=ID(required=False))
+    events = List(GoogleEvent, calendar_id=ID())
     forecast = Field(OWMForecast, zip=Int(), country_code=String())
 
     def resolve_task(root, info, task_id):

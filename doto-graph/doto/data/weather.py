@@ -24,10 +24,7 @@ def fetch_forecast_data(zip, country_code):
         country_code=country_code,
         zip=zip,
     )
-    print('Fetching forecast from {}...'.format(url))
     r = requests.get(url)
-    print('resp: ', r)
-    print('resp.status_code: ', r.status_code)
     assert r.status_code == 200, "Bad response from OWM"
     return r.json()
 
