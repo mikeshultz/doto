@@ -1,6 +1,7 @@
 import re
 import time
 from datetime import datetime
+from dateutil.parser import parse
 
 from doto.data.conn import get_conn
 
@@ -82,7 +83,8 @@ def datetime_to_string(v):
 
 
 def string_to_datetime(v):
-    return datetime.fromisoformat(v)
+    # datetime.fromisoformat() only in 3.7+
+    return parse(v)
 
 
 def date_db_to_json(v):
