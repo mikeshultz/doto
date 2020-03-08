@@ -1,0 +1,15 @@
+.events-container.today {
+    margin-bottom: 4rem;
+}
+
+.events-container.today .event {
+    border-color: var(--extreme);
+}
+
+.events-container.tomorrow .event {
+    border-color: var(--high);
+}
+
+.events-container.future .event {
+    border-color: var(--fg);
+}
