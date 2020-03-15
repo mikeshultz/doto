@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import { Link } from "react-router-dom"
 import get from 'lodash/get'
 
 import Forecast from '../components/Forecast'
@@ -24,6 +23,11 @@ function Weather(props) {
       clearInterval(refreshInterval.current)
     }
   })
+
+  if (error) {
+    console.error(error)
+    return null
+  }
 
   return (
     <div id="home">

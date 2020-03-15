@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { GOOGLE_AUTH } from '../queries'
 import Field from './Field'
@@ -28,7 +28,7 @@ function AddCalendarModal(props) {
       window.location = authUrl
     } else {
       // TODO: Display to user
-      console.debug('')
+      console.debug(mutationError)
       console.error('Initiating auth fialed')
       setError('Unknown Error: Failed to start auth with Google')
     }

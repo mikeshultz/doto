@@ -25,30 +25,6 @@ function getTempColor(temp, alpha='0.5') {
   return `rgba(255,255,255,${alpha})`
 }
 
-function ColoredTemp(props) {
-  console.log('temp: ', props.temp)
-  let color = '#FF6D6D'
-  if (props.temp > 80) {
-    color = '#FFD46D'
-  } else if (props.temp > 60) {
-    color = '#FFD46D'
-  } else if (props.temp > 40) {
-    color = '#9DFF6D'
-  } else if (props.temp > 20) {
-    color = '#6DFFED'
-  } else if (props.temp > 0) {
-    color = '#6DC8FF'
-  } else {
-    color = '#ffffff'
-  }
-
-  const style = {
-    color
-  }
-
-  return <span style={style}>{props.temp}</span>
-}
-
 function Forecast(props) {
   const labels = []
   let maxAlpha = 0.5
@@ -81,18 +57,13 @@ function Forecast(props) {
   useEffect(() => {
     const el = document.getElementById('forecastchart')
     const ctx = el.getContext('2d')
-    /*const gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
-    backgroundColors.forEach((col, idx) => {
-      console.log(`idx: ${idx} - col: ${col}`)
-      gradientFill.addColorStop(idx, col)
-    })*/
+    // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: labels,
         datasets: [{
           data: dataPoints,
-          //backgroundColor: gradientFill, //backgroundColors, //avgColor, //'rgba(64,64,64,0.5)', //backgroundColors,
           backgroundColor: avgColor,
           borderColor: borderColors,
           borderWidth: 1

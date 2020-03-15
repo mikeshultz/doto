@@ -10,7 +10,8 @@ function nl2br(v) {
 }
 
 function Event(props) {
-  const {
+  /**
+   Available event props
     id,
     status,
     created,
@@ -25,6 +26,12 @@ function Event(props) {
     originalStartTime,
     recurringEventId,
     reminders,
+  */
+  const {
+    summary,
+    description,
+    start,
+    end,
   } = props.event
   const [expanded, setExpanded] = useState(false)
 
