@@ -61,16 +61,15 @@ function Forecast(props) {
   const backgroundColors = []
 
   for (const point of props.points) {
-    const time = moment(point.datetime)
+    const time = moment.utc(point.datetime)
 
     // Chart data
     pointCount += 1
     pointSum += point.main.temp
-    labels.push(time.format("ddd, hA"))
+    labels.push(time.local().format("ddd, hA"))
     dataPoints.push(point.main.temp)
     borderColors.push(getTempColor(point.main.temp))
     const pointAlpha = maxAlpha - (pointCount * 0.01)
-    console.log('pointAlpha:', pointAlpha)
     backgroundColors.push(getTempColor(point.main.temp, pointAlpha))
   }
 
