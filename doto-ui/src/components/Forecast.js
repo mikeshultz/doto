@@ -3,6 +3,9 @@ import moment from 'moment'
 import Chart from 'chart.js'
 
 import './Forecast.css'
+import arrow from '../static/arrow.png'
+
+const BASE_POINT_SIZE = 5
 
 function getTempColor(temp, alpha='0.5') {
   if (temp > 80) {
@@ -32,9 +35,12 @@ function Forecast(props) {
   let pointSum = 0
   let avgTemp = 0
   let avgColor = getTempColor(avgTemp)
-  const dataPoints = []
+  const temperatures = []
   const borderColors = []
   const backgroundColors = []
+  const pointRotations = []
+  const pointSizes = []
+  const pressures = []
 
   for (const point of props.points) {
     const time = moment.utc(point.datetime)
@@ -43,35 +49,76 @@ function Forecast(props) {
     pointCount += 1
     pointSum += point.main.temp
     labels.push(time.local().format("ddd, hA"))
-    dataPoints.push(point.main.temp)
+    pressures.push(point.main.pressure)
+    temperatures.push(point.main.temp)
+    pointRotations.push(point.wind.deg)
+    pointSizes.push(point.wind.speed + BASE_POINT_SIZE)
     borderColors.push(getTempColor(point.main.temp))
+    //console.log('pressure point:', point.main.pressure)
+    //borderColors[0] = 'rgba(255,255,255,1)'
     const pointAlpha = maxAlpha - (pointCount * 0.01)
     backgroundColors.push(getTempColor(point.main.temp, pointAlpha))
   }
 
   if (pointCount > 0) {
     avgTemp = pointSum / pointCount
-    avgColor = getTempColor(avgTemp, '0.2')
+    avgColor = getTempColor(avgTemp, '0.1')
   }
 
   useEffect(() => {
     const el = document.getElementById('forecastchart')
     const ctx = el.getContext('2d')
+    const pointRadius = 10
+    const arrowImage = new Image(4, 15)
+    arrowImage.src = arrow
     // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: labels,
         datasets: [{
-          data: dataPoints,
+          label: 'Temperature',
+          yAxisID: 'Temperature',
+          data: temperatures,
           backgroundColor: avgColor,
-          borderColor: borderColors,
-          borderWidth: 1
+          pointBorderColor: borderColors,
+          pointBackgroundColor: borderColors,
+          borderWidth: 1,
+          pointRadius: 0,
+        }, {
+          label: 'Pressure',
+          yAxisID: 'Pressure',
+          data: pressures,
+          borderColor: 'rgba(255, 255, 255, 0.25)',
+          pointRadius: pointSizes,
+          pointRotation: pointRotations,
+          pointHoverRadius: pointSizes,
+          pointStyle: arrowImage
         }],
       },
       options: {
         legend: {
           display: false
+        },
+        scales: {
+          yAxes: [
+            {
+              id: 'Temperature',
+              type: 'linear',
+              position: 'left',
+              scalePositionLeft: true,
+              min: 0,
+              max: 100
+            },
+            {
+              id: 'Pressure',
+              type: 'linear',
+              position: 'right',
+              scalePositionLeft: false,
+              min: 500,
+              max: 1090
+            }
+          ]
         }
       }
     })
