@@ -5,7 +5,8 @@ import Chart from 'chart.js'
 import './Forecast.css'
 import arrow from '../static/arrow.png'
 
-const BASE_POINT_SIZE = 5
+// Scaled strangely on canvas
+const BASE_POINT_SIZE = 10
 
 function getTempColor(temp, alpha='0.5') {
   if (temp > 80) {
@@ -40,7 +41,7 @@ function Forecast(props) {
   const borderColors = []
   const backgroundColors = []
   const pointRotations = []
-  const pointSizes = []
+  const windIcons = []
   const pressures = []
 
   for (const point of props.points) {
@@ -52,9 +53,14 @@ function Forecast(props) {
     labels.push(time.local().format("ddd, hA"))
     pressures.push(point.main.pressure)
     temperatures.push(point.main.temp)
-    pointRotations.push(point.wind.deg)
-    pointSizes.push(point.wind.speed + BASE_POINT_SIZE)
     borderColors.push(getTempColor(point.main.temp))
+
+    // Wind images
+    const windHeight = (point.wind.speed || 0) + BASE_POINT_SIZE
+    const windImage = new Image((windHeight / 3.75) + 1, windHeight)
+    windImage.src = arrow
+    windIcons.push(windImage)
+    pointRotations.push(point.wind.deg)
 
     let pointImage = null
     if (point.weather && point.weather.length > 0) {
@@ -78,8 +84,8 @@ function Forecast(props) {
     const el = document.getElementById('forecastchart')
     const ctx = el.getContext('2d')
     const pointRadius = 10
-    const arrowImage = new Image(4, 15)
-    arrowImage.src = arrow
+    /*const arrowImage = new Image(4, 15)
+    arrowImage.src = arrow*/
     // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
       type: 'line',
@@ -100,10 +106,8 @@ function Forecast(props) {
           yAxisID: 'Pressure',
           data: pressures,
           borderColor: 'rgba(255, 255, 255, 0.25)',
-          pointRadius: pointSizes,
           pointRotation: pointRotations,
-          pointHoverRadius: pointSizes,
-          pointStyle: arrowImage
+          pointStyle: windIcons
         }],
       },
       options: {
