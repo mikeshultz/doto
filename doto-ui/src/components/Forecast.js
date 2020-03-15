@@ -35,6 +35,7 @@ function Forecast(props) {
   let pointSum = 0
   let avgTemp = 0
   let avgColor = getTempColor(avgTemp)
+  const icons = []
   const temperatures = []
   const borderColors = []
   const backgroundColors = []
@@ -54,6 +55,14 @@ function Forecast(props) {
     pointRotations.push(point.wind.deg)
     pointSizes.push(point.wind.speed + BASE_POINT_SIZE)
     borderColors.push(getTempColor(point.main.temp))
+
+    let pointImage = null
+    if (point.weather && point.weather.length > 0) {
+      pointImage = new Image(50, 50)
+      pointImage.src = `http://openweathermap.org/img/wn/${point.weather[0].icon}@2x.png`
+    }
+    icons.push(pointImage)
+
     //console.log('pressure point:', point.main.pressure)
     //borderColors[0] = 'rgba(255,255,255,1)'
     const pointAlpha = maxAlpha - (pointCount * 0.01)
@@ -62,7 +71,7 @@ function Forecast(props) {
 
   if (pointCount > 0) {
     avgTemp = pointSum / pointCount
-    avgColor = getTempColor(avgTemp, '0.1')
+    avgColor = getTempColor(avgTemp, '0.3')
   }
 
   useEffect(() => {
@@ -83,8 +92,9 @@ function Forecast(props) {
           backgroundColor: avgColor,
           pointBorderColor: borderColors,
           pointBackgroundColor: borderColors,
-          borderWidth: 1,
-          pointRadius: 0,
+          pointStyle: icons,
+          pointRadius: 15,
+          borderWidth: 1
         }, {
           label: 'Pressure',
           yAxisID: 'Pressure',
