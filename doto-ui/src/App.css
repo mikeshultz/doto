@@ -124,3 +124,41 @@ div.container {
 .padding-1 {
     padding: 0.5rem;
 }
+
+.ribbon {
+    float: right;
+    overflow: hidden;
+    height: 2rem;
+    width: 20rem;
+    padding: 0;
+    margin: 0;
+    border-radius: 0 0.5rem 0 0;
+}
+
+.ribbon .ribbon-text {
+    z-index: 1;
+    position: relative;
+    left: 2.5rem;
+    color: var(--bg);
+}
+
+.ribbon .inner.extreme { background: var(--extreme); }
+.ribbon .inner.high { background: var(--high); }
+.ribbon .inner.normal { background: var(--normal); }
+
+.ribbon .inner {
+    /*background: #f00;
+    height: 3rem;
+    width: 4rem;
+    transform: rotateZ(45deg);
+    position: relative;
+    top: -1.5rem;
+    right: 0rem;*/
+    background: #f00;
+    height: 20rem;
+    width: 40rem;
+    transform: rotateZ(45deg);
+    position: relative;
+    top: -11.5rem;
+    right: 5rem;
+}
