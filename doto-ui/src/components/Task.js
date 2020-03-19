@@ -41,7 +41,7 @@ function Task(props) {
 
   const deletedTask = deleteData && deleteData.deleteTask ? deleteData.deleteTask.ok : null
   const completedTask = completeData ? completeData.task : null
-  console.log('completedTask:', completedTask)
+
   useEffect(() => {
     setTask({
       ...givenTask,
