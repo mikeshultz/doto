@@ -52,9 +52,13 @@ function Task(props) {
   const { taskId, priority, name, added, deadline, completed, notes } = task
   const now = moment(new Date())
   const dead = deadline ? moment(deadline) : null
-  const passed = dead && dead < now
-  const soon = dead ? now - dead < ONE_DAY : false
-  const near = dead ? now - dead < THREE_DAYS : false
+  const passed = !!dead && dead < now
+  const soon = !!dead ? dead - now < ONE_DAY : false
+  const near = !!dead ? dead - now < THREE_DAYS : false
+  if (!window.dates) window.dates = {
+    now: moment(new Date())
+  }
+  window.dates[taskId] = dead
 
   let priorityClass = 'no-priority'
   if (priority <= 40) priorityClass = 'low'
@@ -64,7 +68,7 @@ function Task(props) {
 
   const showRibbon = !!(soon || passed || near)
   const ribbonColor = soon || passed ? 'extreme' : near ? 'high' : 'normal'
-  const ribbonText = passed ? 'Overdue' : soon ? 'Deadline today' : near ? '3 days left' : ''
+  const ribbonText = passed ? 'Overdue' : soon ? 'Deadline today' : near ? '<3 days left' : ''
 
   function completeSelf() {
     // Mutation

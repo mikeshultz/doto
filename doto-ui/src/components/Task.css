@@ -147,7 +147,9 @@
     color: var(--bg);
 }
 
-.task .ribbon.red { background: #f00; }
+.task .ribbon .inner.extreme { background: var(--extreme); }
+.task .ribbon .inner.high { background: var(--high); }
+.task .ribbon .inner.normal { background: var(--normal); }
 
 .task .ribbon .inner {
     /*background: #f00;
