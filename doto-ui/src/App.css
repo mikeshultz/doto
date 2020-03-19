@@ -120,3 +120,7 @@ div.container {
 
 .cols .col.left {}
 .cols .col.right {}
+
+.padding-1 {
+    padding: 0.5rem;
+}

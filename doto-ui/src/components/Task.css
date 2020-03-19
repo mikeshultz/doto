@@ -4,12 +4,14 @@
     border-width: 3px;
     border-style: solid;
     border-radius: 1rem;
-    padding: 0.5rem;
+    padding: 0;
+    /*padding: 0.5rem;*/
     margin: 1rem;
     line-height: 2rem;
     font-size: 2rem;
     overflow-x: none;
     overflow-y: auto;
+    /*overflow-y: hidden;*/
     max-height: 15rem;
     transition-property: max-height, border-width, padding;
     transition-duration: 1s;
@@ -37,6 +39,7 @@
 
 .task .details {
     font-size: 1rem;
+    overflow-y: auto;
 }
 .task .details table {}
 .task .details table tr {
@@ -47,10 +50,18 @@
     width: 150px;
 }
 
+.task .title {
+    display: inline-block;
+    height: 2rem;
+}
+
 .task .expand {
     cursor: pointer;
     height: 1rem;
     position: relative;
+    /*top: 1.5rem;
+    left: 1rem;*/
+    height: 1rem;
     width: 1rem;
     display: inline-block;
     padding-right: 1rem;
@@ -60,9 +71,9 @@
     background: var(--fg);
     content: '';
     height: 5px;
-    left: 0;
+    left: 1rem;
+    top: 1rem;
     position: absolute;
-    top: 0;
     width: 1rem;
     transition: transform 500ms ease;
 }
@@ -117,4 +128,40 @@
 
 .columns .column .label {
     margin-right: 1rem;
+}
+
+.task .ribbon {
+    float: right;
+    overflow: hidden;
+    height: 2rem;
+    width: 20rem;
+    padding: 0;
+    margin: 0;
+    border-radius: 0 0.5rem 0 0;
+}
+
+.task .ribbon-text {
+    z-index: 1;
+    position: relative;
+    left: 2.5rem;
+    color: var(--bg);
+}
+
+.task .ribbon.red { background: #f00; }
+
+.task .ribbon .inner {
+    /*background: #f00;
+    height: 3rem;
+    width: 4rem;
+    transform: rotateZ(45deg);
+    position: relative;
+    top: -1.5rem;
+    right: 0rem;*/
+    background: #f00;
+    height: 20rem;
+    width: 40rem;
+    transform: rotateZ(45deg);
+    position: relative;
+    top: -11.5rem;
+    right: 5rem;
 }

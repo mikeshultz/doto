@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 
@@ -19,7 +20,8 @@ function FormattedText(props) {
   )
 }
 
-const ALERT_TIME = 86400000 // 24 hours
+const ONE_DAY = 86400000 // 24 hours
+const THREE_DAYS = 259200000 // 72 hours
 
 function Task(props) {
   const givenTask = props.task
@@ -48,14 +50,21 @@ function Task(props) {
   }, [givenTask]) //, completedTask])
 
   const { taskId, priority, name, added, deadline, completed, notes } = task
-  const now = +new Date()
-  const soon = deadline ? deadline < now || now - deadline < ALERT_TIME : false
+  const now = moment(new Date())
+  const dead = deadline ? moment(deadline) : null
+  const passed = dead && dead < now
+  const soon = dead ? now - dead < ONE_DAY : false
+  const near = dead ? now - dead < THREE_DAYS : false
 
   let priorityClass = 'no-priority'
   if (priority <= 40) priorityClass = 'low'
   if (priority <= 30) priorityClass = 'normal'
   if (priority <= 20) priorityClass = 'high'
   if (priority <= 10) priorityClass = 'extreme'
+
+  const showRibbon = !!(soon || passed || near)
+  const ribbonColor = soon || passed ? 'extreme' : near ? 'high' : 'normal'
+  const ribbonText = passed ? 'Overdue' : soon ? 'Deadline today' : near ? '3 days left' : ''
 
   function completeSelf() {
     // Mutation
@@ -96,8 +105,12 @@ function Task(props) {
   return (
     <li className={`task ${priorityClass}${deletedTask ? ' deleted' : ''}${completedTask !== null ? ' completed' : ''}${squashed ? ' squashed' : ''}`}>
       <div onClick={() => setExpanded(!expanded)}>
-        <div className={`expand${expanded ? '' : ' collapsed'}`}></div>
-        {name}
+        <div className={`expand padding-1${expanded ? '' : ' collapsed'}`}></div>
+        <div className="title padding-1">{name}</div>
+        <div className={`ribbon${showRibbon ? '' : ' hide'}`}>
+          <div className="ribbon-text">{ribbonText}</div>
+          <div className={`inner ${ribbonColor ? ribbonColor : 'hide'}`} />
+        </div>
       </div>
       <div className={`details${expanded ? '' : ' hide'}`}>
         <FormattedText text={notes} />
