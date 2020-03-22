@@ -52,6 +52,7 @@ button {
     margin: 1rem 0;
     font-size: 1.25rem;
 }
+.tagify,
 .field input,
 .field select,
 .field textarea {
@@ -66,6 +67,11 @@ button {
 .field textarea {
     width: 100%;
     min-height: 5rem;
+}
+
+.tagify {}
+.tagify span {
+  /* this is pared with input.field */
 }
 
 button.save {

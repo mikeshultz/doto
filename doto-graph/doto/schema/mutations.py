@@ -20,11 +20,12 @@ class CreateTask(Mutation):
         notes = String()
         deadline = String()
         completed = String()
+        tags = String()
 
     ok = Boolean()
     task = Field(Task)
 
-    def mutate(parent, info, priority, name, notes="", deadline=None, completed=None):
+    def mutate(parent, info, priority, name, notes="", tags="", deadline=None, completed=None):
         ok = False
         # TODO: Validate
         added = datetime.now()
@@ -38,7 +39,8 @@ class CreateTask(Mutation):
                 notes=notes,
                 added=added,
                 deadline=deadline,
-                completed=completed
+                completed=completed,
+                tags=tags,
             )
         return CreateTask(task=task, ok=ok)
 
@@ -77,13 +79,14 @@ class UpdateTask(Mutation):
         notes = String()
         deadline = String()
         completed = String()
+        tags = String()
 
     ok = Boolean()
     task = Field(Task)
 
-    def mutate(parent, info, task_id, priority, name, notes="", deadline=None, completed=None):
+    def mutate(parent, info, task_id, priority, name, notes="", tags="", deadline=None, completed=None):
         print('updating task #{}'.format(task_id))
-        ok = update_task(task_id, priority, name, notes, deadline, completed)
+        ok = update_task(task_id, priority, name, notes, tags, deadline, completed)
         task = get_task(task_id)
         return UpdateTask(ok=ok, task=task)
 

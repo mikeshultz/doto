@@ -21,7 +21,7 @@ def get_tasks():
     tasks = []
     conn = get_conn()
     curs = conn.cursor()
-    curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed
+    curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed, tags
         FROM task
         ORDER BY priority, deadline DESC, added DESC;
         """)
@@ -43,6 +43,7 @@ def get_tasks():
             added=timestamp_to_datetime(row[4]),
             deadline=deadline,
             completed=completed,
+            tags=row[7],
         )
 
         tasks.append(t)
@@ -56,7 +57,7 @@ def get_task(task_id):
     conn = get_conn()
     curs = conn.cursor()
     curs.execute("""SELECT task_id, priority, name, notes, added, deadline,
-        completed
+        completed, tags
         FROM task WHERE task_id=?;""", (task_id, ))
     row = curs.fetchone()
 
@@ -70,6 +71,7 @@ def get_task(task_id):
     added = timestamp_to_datetime(row[4])
     deadline = row[5]
     completed = row[6]
+    tags = row[7]
 
     if deadline:
         deadline = timestamp_to_datetime(deadline)
@@ -85,13 +87,14 @@ def get_task(task_id):
         added,
         deadline,
         completed,
+        tags,
     )
     curs.close()
     return task
 
 
 @sync
-def create_task(priority, name, notes, added=None, deadline=None, completed=None):
+def create_task(priority, name, notes, tags, added=None, deadline=None, completed=None):
     """ Create a teask """
     conn = get_conn()
     curs = conn.cursor()
@@ -102,9 +105,9 @@ def create_task(priority, name, notes, added=None, deadline=None, completed=None
         completed = date_json_to_db(completed)
     curs.execute(
         """INSERT INTO task 
-        (priority, name, notes, added, deadline, completed)
-        VALUES (?, ?, ?, ?, ?, ?);""", (
-            priority, name, notes, added, deadline, completed
+        (priority, name, notes, added, deadline, completed, tags)
+        VALUES (?, ?, ?, ?, ?, ?, ?);""", (
+            priority, name, notes, added, deadline, completed, tags
         )
     )
     print('create_task curs.rowcount', curs.rowcount)
@@ -142,7 +145,7 @@ def complete_task(task_id):
 
 
 @sync
-def update_task(task_id, priority, name, notes, deadline=None, completed=None):
+def update_task(task_id, priority, name, notes, tags, deadline=None, completed=None):
     """ Create a teask """
     conn = get_conn()
     curs = conn.cursor()
@@ -156,9 +159,10 @@ def update_task(task_id, priority, name, notes, deadline=None, completed=None):
         name=?,
         notes=?,
         deadline=?,
-        completed=?
+        completed=?,
+        tags=?
         WHERE task_id=?;""", (
-            priority, name, notes, deadline, completed, task_id
+            priority, name, notes, deadline, completed, tags, task_id
         )
     )
     print('update_task curs.rowcount', curs.rowcount)

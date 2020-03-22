@@ -57,10 +57,7 @@
 
 .task .expand {
     cursor: pointer;
-    height: 1rem;
     position: relative;
-    /*top: 1.5rem;
-    left: 1rem;*/
     height: 1rem;
     width: 1rem;
     display: inline-block;
@@ -71,9 +68,9 @@
     background: var(--fg);
     content: '';
     height: 5px;
+    position: absolute;
     left: 1rem;
     top: 1rem;
-    position: absolute;
     width: 1rem;
     transition: transform 500ms ease;
 }

@@ -7,7 +7,7 @@ class GenericObject:
 
         for prop in self.props:
             val = None
-            if kwargs.get(prop):
+            if kwargs.get(prop) is not None:
                 val = kwargs[prop]
                 setattr(self, prop, val)
             elif not hasattr(self, prop):
@@ -17,4 +17,4 @@ class GenericObject:
 
 class Task(GenericObject):
     """ Generic Task object """
-    props = ['task_id', 'priority', 'name', 'notes', 'added', 'deadline', 'completed']
+    props = ['task_id', 'priority', 'name', 'notes', 'added', 'deadline', 'completed', 'tags']

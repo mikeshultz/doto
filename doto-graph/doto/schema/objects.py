@@ -16,6 +16,7 @@ class Task(ObjectType):
     added = DateTime()
     deadline = DateTime()
     completed = DateTime()
+    tags = String()
 
     def resolve_id(parent, info):
         return parent.task_id
@@ -40,6 +41,9 @@ class Task(ObjectType):
 
     def resolve_completed(parent, info):
         return parent.completed
+
+    def resolve_tags(parent, info):
+        return parent.tags
 
 
 class GoogleUser(ObjectType):

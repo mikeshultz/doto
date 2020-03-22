@@ -21,7 +21,8 @@ def create_schema(c=get_conn(), tables=ALL_TABLES):
             notes text,
             added integer not null,
             deadline integer default null,
-            completed integer default null
+            completed integer default null,
+            tags text not null default ''
         );""")
 
 

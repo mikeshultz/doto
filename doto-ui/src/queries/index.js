@@ -11,6 +11,7 @@ query GetTasks {
     added
     deadline
     completed
+    tags
   }
 }
 `
@@ -26,26 +27,28 @@ query GetTask ($taskId: ID!) {
     added
     deadline
     completed
+    tags
   }
 }
 `
 
 export const CREATE_TASK = gql`
-mutation CreateTask($priority: Int!, $name: String!, $notes: String, $deadline: String) {
-  createTask(priority: $priority, name: $name, notes: $notes, deadline: $deadline) {
+mutation CreateTask($priority: Int!, $name: String!, $notes: String, $tags: String, $deadline: String) {
+  createTask(priority: $priority, name: $name, notes: $notes, tags: $tags, deadline: $deadline) {
     ok
     task {
       id
       taskId
       name
+      tags
     }
   }
 }
 `
 
 export const UPDATE_TASK = gql`
-mutation UpdateTask($taskId: ID!, $priority: Int!, $name: String!, $notes: String, $deadline: String) {
-  updateTask(taskId: $taskId, priority: $priority, name: $name, notes: $notes, deadline: $deadline) {
+mutation UpdateTask($taskId: ID!, $priority: Int!, $name: String!, $notes: String, $tags: String, $deadline: String) {
+  updateTask(taskId: $taskId, priority: $priority, name: $name, notes: $notes, tags: $tags, deadline: $deadline) {
     ok
     task {
       id
@@ -54,6 +57,7 @@ mutation UpdateTask($taskId: ID!, $priority: Int!, $name: String!, $notes: Strin
       name
       notes
       deadline
+      tags
     }
   }
 }
