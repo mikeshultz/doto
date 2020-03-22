@@ -1,3 +1,5 @@
+import sha1 from 'js-sha1'
+
 /**
  * Get brightness of a hex color
  *
@@ -37,24 +39,12 @@ export function buf2hex(buffer) {
 }
 
 /**
- * Return sha1 hash of string
- *
- * @param {String} to hash with SHA-1
- * @returns {string} hex digest
- */
-export async function sha1(v) {
-  const bufIn = new TextEncoder().encode(v)
-  const bufOut = await crypto.subtle.digest('SHA-1', bufIn)
-  return buf2hex(bufOut)
-}
-
-/**
  * Return 6-char hex string hash of string
  *
  * @param {String} to hash with SHA-1
  * @returns {string} hex digest
  */
 export async function rgbHash(v) {
-  const hash = await sha1(v)
+  const hash = sha1(v)
   return `#${hash.slice(-6)}`
 }
