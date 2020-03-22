@@ -2,6 +2,8 @@ import moment from 'moment'
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 
+import TagBadges from './TagBadges'
+
 import { COMPLETE_TASK, DELETE_TASK } from '../queries'
 
 import './Task.css'
@@ -49,7 +51,7 @@ function Task(props) {
     })
   }, [givenTask]) //, completedTask])
 
-  const { taskId, priority, name, added, deadline, completed, notes } = task
+  const { taskId, priority, name, added, deadline, completed, notes, tags } = task
   const now = moment(new Date())
   const dead = deadline ? moment(deadline) : null
   const passed = !!dead && dead < now
@@ -110,7 +112,10 @@ function Task(props) {
     <li className={`task ${priorityClass}${deletedTask ? ' deleted' : ''}${completedTask !== null ? ' completed' : ''}${squashed ? ' squashed' : ''}`}>
       <div onClick={() => setExpanded(!expanded)}>
         <div className={`expand padding-1${expanded ? '' : ' collapsed'}`}></div>
-        <div className="title padding-1">{name}</div>
+        <div className="title padding-1">
+          {name}
+          <TagBadges tags={tags} />
+        </div>
         <div className={`ribbon${showRibbon ? '' : ' hide'}`}>
           <div className="ribbon-text">{ribbonText}</div>
           <div className={`inner ${ribbonColor ? ribbonColor : 'hide'}`} />
