@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import moment from 'moment'
 import Chart from 'chart.js'
+import 'chartjs-plugin-annotation'
 
 import './Forecast.css'
 import arrow from '../static/arrow.png'
@@ -34,6 +35,8 @@ function Forecast(props) {
   let maxAlpha = 0.5
   let pointCount = 0
   let pointSum = 0
+  let maxTemp = 0
+  let minTemp = 0
   let avgTemp = 0
   let avgColor = getTempColor(avgTemp)
   const icons = []
@@ -50,6 +53,8 @@ function Forecast(props) {
     // Chart data
     pointCount += 1
     pointSum += point.main.temp
+    if (point.main.temp > maxTemp) maxTemp = point.main.temp
+    if (point.main.temp < minTemp) minTemp = point.main.temp
     labels.push(time.local().format("ddd, hA"))
     pressures.push(point.main.pressure)
     temperatures.push(point.main.temp)
@@ -80,6 +85,44 @@ function Forecast(props) {
     avgColor = getTempColor(avgTemp, '0.3')
   }
 
+  const annotations = []
+
+  if (maxTemp > 90 && minTemp < 90) {
+    annotations.push({
+      id: 'hot',
+      type: 'line',
+      mode: 'horizontal',
+      scaleID: 'Temperature',
+      value: 90,
+      borderColor: 'rgba(249, 107, 68, 0.25)',
+      borderWidth: 2,
+    })
+  }
+
+  if (maxTemp > 32 && minTemp < 32) {
+    annotations.push({
+      id: 'freezing-line',
+      type: 'line',
+      mode: 'horizontal',
+      scaleID: 'Temperature',
+      value: 32,
+      borderColor: 'rgba(144, 245, 255, 0.25)',
+      borderWidth: 2,
+    })
+  }
+
+  if (maxTemp > 0 && minTemp < 0) {
+    annotations.push({
+      id: 'zero-line',
+      type: 'line',
+      mode: 'horizontal',
+      scaleID: 'Temperature',
+      value: 0,
+      borderColor: 'rgba(68, 185, 249, 0.25)',
+      borderWidth: 2,
+    })
+  }
+
   useEffect(() => {
     const el = document.getElementById('forecastchart')
     const ctx = el.getContext('2d')
@@ -105,12 +148,15 @@ function Forecast(props) {
           label: 'Pressure',
           yAxisID: 'Pressure',
           data: pressures,
-          borderColor: 'rgba(255, 255, 255, 0.25)',
+          borderColor: 'rgba(255, 255, 255, 0.75)',
           pointRotation: pointRotations,
           pointStyle: windIcons
         }],
       },
       options: {
+        annotation: {
+          annotations
+        },
         legend: {
           display: false
         },
