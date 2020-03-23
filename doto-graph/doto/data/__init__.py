@@ -17,14 +17,28 @@ from doto.data.weather import get_forecast
 
 
 @sync
-def get_tasks():
+def get_tasks(task_filter):
+    tag_filter = None
     tasks = []
     conn = get_conn()
     curs = conn.cursor()
-    curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed, tags
-        FROM task
-        ORDER BY priority, deadline DESC, added DESC;
-        """)
+
+    if task_filter:
+        print('$$$$$$$$$$$$filter: ', task_filter)
+        if 'tag' in task_filter:
+            tag_filter = '%{}%'.format(task_filter.get('tag'))
+
+    if tag_filter is not None:
+        curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed, tags
+            FROM task
+            WHERE tags LIKE ?
+            ORDER BY priority, deadline DESC, added DESC;
+            """, (tag_filter, ))
+    else:
+        curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed, tags
+            FROM task
+            ORDER BY priority, deadline DESC, added DESC;
+            """)
     for row in curs.fetchall():
         deadline = None
         completed = None
@@ -167,3 +181,21 @@ def update_task(task_id, priority, name, notes, tags, deadline=None, completed=N
     )
     print('update_task curs.rowcount', curs.rowcount)
     return curs.rowcount >= 1
+
+
+@sync
+def get_tags():
+    tags = set()
+    conn = get_conn()
+    curs = conn.cursor()
+
+    curs.execute("""SELECT tags FROM task;""")
+
+    for row in curs.fetchall():
+        row_tags = row[0]
+        for t in row_tags.split(','):
+            if t:
+                tags.add(t)
+
+    curs.close()
+    return tags

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
 import { TASKS } from '../queries'
 import Task from '../components/Task'
 import TaskModal from '../components/TaskModal'
+import TagNav from '../components/TagNav'
 
 import './Tasks.css'
 
@@ -11,7 +12,14 @@ const TASK_REFETCH_INTERVAL = 1800000 // 30m
 
 function Tasks(props) {
   const refreshInterval = useRef(null)
-  const { loading, error, data, refetch } = useQuery(TASKS)
+  const [filter, setFilter] = useState(null)
+
+  const variables = {}
+  if (filter) {
+    variables.taskFilter = filter
+  }
+
+  const { loading, error, data, refetch } = useQuery(TASKS, { variables })
 
   useEffect(() => {
     // refetch every 30min
@@ -38,6 +46,14 @@ function Tasks(props) {
     return <p><button onClick={() => props.taskModalState(0)}>Create</button> your first task</p>
   }
 
+  function addFilter(f) {
+    setFilter(f)
+  }
+
+  function clearFilter() {
+    setFilter(null)
+  }
+
   // Don't show completed tasks
   const tasks = data.tasks.filter(t => !t.completed).map(t => {
     return <Task key={t.taskId} task={t} taskModalState={props.taskModalState} refetchTasks={refetch} />
@@ -45,6 +61,7 @@ function Tasks(props) {
 
   return (
     <div>
+      <TagNav currentFilter={filter} addFilter={addFilter} clearFilter={clearFilter} />
       <ul className="tasks">
           {tasks}
       </ul>

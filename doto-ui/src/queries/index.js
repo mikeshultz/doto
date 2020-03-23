@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost'
 
 export const TASKS = gql`
-query GetTasks {
-  tasks {
+query GetTasks($taskFilter: TaskFilter) {
+  tasks (taskFilter: $taskFilter) {
     id
     taskId
     priority
@@ -190,4 +190,10 @@ query Forecast($zip: Int, $countryCode: String) {
   }
 }
 
+`
+
+export const GET_TAGS = gql`
+query Tags {
+  tags
+}
 `

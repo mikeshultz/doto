@@ -1,4 +1,4 @@
-from graphene import ID, Schema, ObjectType, Field, List, Int, String
+from graphene import ID, Schema, InputObjectType, ObjectType, Field, List, Int, String
 
 from doto.data import (
     get_task,
@@ -7,6 +7,7 @@ from doto.data import (
     get_calendars,
     get_forecast,
     get_events,
+    get_tags,
 )
 from doto.const import DEFAULT_ZIP, DEFAULT_COUNTRY_CODE
 from doto.schema.mutations import (
@@ -20,9 +21,14 @@ from doto.schema.objects import Task, GoogleCalendar, GoogleEvent, OWMForecast
 from doto.utils import uniq
 
 
+class TaskFilter(InputObjectType):
+    tag = String()
+
+
 class Query(ObjectType):
     task = Field(Task, task_id=ID(required=True))
-    tasks = List(Task)
+    tasks = List(Task, task_filter=TaskFilter())
+    tags = List(String)
     calendars = List(GoogleCalendar, calendar_id=ID())
     events = List(GoogleEvent, calendar_id=ID())
     forecast = Field(OWMForecast, zip=Int(), country_code=String())
@@ -30,8 +36,11 @@ class Query(ObjectType):
     def resolve_task(root, info, task_id):
         return get_task(task_id)
 
-    def resolve_tasks(root, info):
-        return get_tasks()
+    def resolve_tasks(root, info, task_filter=None):
+        return get_tasks(task_filter)
+
+    def resolve_tags(root, info):
+        return get_tags()
 
     def resolve_calendars(root, info, calendar_id=None):
         calendars = []
