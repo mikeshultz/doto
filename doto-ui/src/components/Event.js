@@ -4,7 +4,6 @@ import moment from 'moment'
 import './Event.css'
 
 const ONE_DAY = 86400000 // 24 hours
-const TWO_DAYS = 172800000 // 48 hours
 
 function nl2br(v) {
   return {

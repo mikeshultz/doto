@@ -83,7 +83,7 @@ function Forecast(props) {
   useEffect(() => {
     const el = document.getElementById('forecastchart')
     const ctx = el.getContext('2d')
-    const pointRadius = 10
+    //const pointRadius = 10
     /*const arrowImage = new Image(4, 15)
     arrowImage.src = arrow*/
     // eslint-disable-next-line no-unused-vars

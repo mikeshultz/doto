@@ -90,11 +90,10 @@ function TagsField(props) {
 
 function TaskForm(props) {
   const { task: originalTask, reset } = props
-  const workinTask = {}
   const tagSet = new Set()
   const [task, setTask] = useState(Object.assign({}, DEFAULT_TASK, originalTask))
-  const [addTask, { data: addedData }] = useMutation(CREATE_TASK)
-  const [saveTask, { data: updatedData }] = useMutation(UPDATE_TASK)
+  const [addTask] = useMutation(CREATE_TASK)
+  const [saveTask] = useMutation(UPDATE_TASK)
 
   useEffect(() => {
     originalTask.tags.split(',').forEach(t => {
@@ -197,7 +196,7 @@ function TaskForm(props) {
 
 function TaskModal(props) {
   const { modalState, taskModalState, tasksRefetch } = props
-  const { loading, error, data, refetch, called } = useQuery(TASK, {
+  const { loading, error, data } = useQuery(TASK, {
     variables: {
       taskId: modalState
     },
