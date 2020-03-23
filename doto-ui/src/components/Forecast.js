@@ -7,7 +7,7 @@ import './Forecast.css'
 import arrow from '../static/arrow.png'
 
 // Scaled strangely on canvas
-const BASE_POINT_SIZE = 10
+const BASE_POINT_SIZE = 20
 
 function getTempColor(temp, alpha='0.5') {
   if (temp > 80) {
