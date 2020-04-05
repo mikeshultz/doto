@@ -96,9 +96,11 @@ function TaskForm(props) {
   const [saveTask] = useMutation(UPDATE_TASK)
   
   useEffect(() => {
-    originalTask.tags.split(',').forEach(t => {
-      if (t) tagSet.add(t)
-    })
+    if (originalTask) {
+      originalTask.tags.split(',').forEach(t => {
+        if (t) tagSet.add(t)
+      })
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function clear() {
@@ -208,7 +210,7 @@ function TaskModal(props) {
     console.error(error)
     return null
   }
-  if (modalState < 1) return null
+  if (modalState < 0) return null
 
   function reset() {
     tasksRefetch()
@@ -216,7 +218,7 @@ function TaskModal(props) {
   }
   
   return (
-    <TaskForm task={data.task} reset={reset} />
+    <TaskForm task={data ? data.task : null} reset={reset} />
   )
 }
 
