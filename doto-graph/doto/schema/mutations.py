@@ -29,7 +29,7 @@ class CreateTask(Mutation):
         ok = False
         # TODO: Validate
         added = datetime.now()
-        task_id = create_task(priority, name, notes, added, deadline, completed)
+        task_id = create_task(priority, name, notes, tags, added, deadline, completed)
         if task_id:
             ok = True
             task = Task(
