@@ -23,7 +23,7 @@ function Badge(props) {
         setFgColor(DEFAULT_LIGHT)
       }
     })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="badge" style={{

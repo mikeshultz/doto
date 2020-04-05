@@ -94,12 +94,12 @@ function TaskForm(props) {
   const [task, setTask] = useState(Object.assign({}, DEFAULT_TASK, originalTask))
   const [addTask] = useMutation(CREATE_TASK)
   const [saveTask] = useMutation(UPDATE_TASK)
-
+  
   useEffect(() => {
     originalTask.tags.split(',').forEach(t => {
       if (t) tagSet.add(t)
     })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function clear() {
     console.debug('clear()')
