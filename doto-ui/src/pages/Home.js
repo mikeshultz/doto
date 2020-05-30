@@ -8,9 +8,10 @@ function Home(props) {
     <div id="home">
       <h1>Home</h1>
       <ul>
-        <li><Link to="/todo">TODO</Link></li>
+        <li><Link to="/todo">Tasks</Link></li>
         <li><Link to="/calendar">Calendar</Link></li>
         <li><Link to="/weather">Weather</Link></li>
+        <li><Link to="/devices">Devices</Link></li>
       </ul>
     </div>
   )
