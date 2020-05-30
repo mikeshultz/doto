@@ -11,9 +11,7 @@ function DeviceStateToggle(props) {
   const { state, toggle } = props
 
   return (
-    <div className={`device-toggle ${state === 'ON' ? 'on' : 'off'}`} onClick={toggle}>
-      {state === 'ON' ? 'on' : 'off'}
-    </div>
+    <div className={`device-toggle ${state === 'ON' ? 'on' : 'off'}`} onClick={toggle}></div>
   )
 }
 
