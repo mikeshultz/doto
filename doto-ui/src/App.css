@@ -6,6 +6,8 @@
     --high: #FFEDCB;
     --normal: #E5FFCB;
     --low: #CBFCFF;
+    --on: #6BFA85;
+    --off: #FA6D6B;
 }
 
 body {

@@ -2,13 +2,16 @@ from datetime import datetime
 from graphene import Mutation, ID, Field, Boolean, String, Int
 
 from doto.data import (
+    DeviceNotFound,
     create_task,
     update_task,
     delete_task,
     get_task,
     complete_task,
     authorize_user_step1,
-    authorize_user_step2
+    authorize_user_step2,
+    device_on,
+    device_off,
 )
 from doto.schema.objects import Task
 
@@ -101,3 +104,31 @@ class GoogleAuth(Mutation):
     def mutate(parent, info, calendar_id):
         auth_url = authorize_user_step1(calendar_id)
         return GoogleAuth(ok=True, auth_url=auth_url)
+
+
+class DeviceOn(Mutation):
+    class Arguments:
+        mac = ID(required=True)
+
+    ok = Boolean()
+
+    def mutate(parent, info, mac):
+        try:
+            device_on(mac)
+            return DeviceOn(ok=True)
+        except DeviceNotFound:
+            return DeviceOn(ok=False)
+
+
+class DeviceOff(Mutation):
+    class Arguments:
+        mac = ID(required=True)
+
+    ok = Boolean()
+
+    def mutate(parent, info, mac):
+        try:
+            device_off(mac)
+            return DeviceOff(ok=True)
+        except DeviceNotFound:
+            return DeviceOff(ok=False)

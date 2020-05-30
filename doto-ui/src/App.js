@@ -12,6 +12,7 @@ import Calendars from './pages/Calendars'
 import Events from './pages/Events'
 import Tasks from './pages/Tasks'
 import Weather from './pages/Weather'
+import Devices from './pages/Devices'
 import AddButton from './components/AddButton'
 
 import './App.css'
@@ -44,6 +45,9 @@ function App() {
             </Route>
             <Route path="/weather">
               <Weather />
+            </Route>
+            <Route path="/devices">
+              <Devices />
             </Route>
             <Route path="/">
               <Home />

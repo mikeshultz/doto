@@ -2,9 +2,9 @@ import sys
 import arrow
 from datetime import datetime, timedelta
 from ics import Calendar as iCal
-from graphene import ID, ObjectType, String, Int, Date, DateTime, List, Float, Field, Boolean
+from graphene import ID, ObjectType, String, Int, Date, DateTime, List, Float, Field, Boolean, Enum
 from doto.data.weather import parse_owm_date
-from doto.utils import is_date_or_none, iso_datetime_or_none
+from doto.utils import is_date_or_none, iso_datetime_or_none, normalize_mac_address
 
 
 class Task(ObjectType):
@@ -450,3 +450,23 @@ class OWMForecast(ObjectType):
 
     def resolve_city(parent, info):
         return parent.get('city')
+
+
+class DeviceState(Enum):
+    OFF = 0
+    ON = 1
+
+
+class Device(ObjectType):
+    mac = ID()
+    name = String()
+    state = DeviceState()
+
+    def resolve_mac(parent, info):
+        return normalize_mac_address(parent.mac)
+
+    def resolve_name(parent, info):
+        return parent.name
+
+    def resolve_state(parent, info):
+        return parent.get_state()

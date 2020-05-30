@@ -8,6 +8,7 @@ from doto.data import (
     get_forecast,
     get_events,
     get_tags,
+    get_devices,
 )
 from doto.const import DEFAULT_ZIP, DEFAULT_COUNTRY_CODE
 from doto.schema.mutations import (
@@ -16,8 +17,16 @@ from doto.schema.mutations import (
     UpdateTask,
     DeleteTask,
     GoogleAuth,
+    DeviceOn,
+    DeviceOff,
 )
-from doto.schema.objects import Task, GoogleCalendar, GoogleEvent, OWMForecast
+from doto.schema.objects import (
+    Task,
+    GoogleCalendar,
+    GoogleEvent,
+    OWMForecast,
+    Device,
+)
 from doto.utils import uniq
 
 
@@ -32,6 +41,7 @@ class Query(ObjectType):
     calendars = List(GoogleCalendar, calendar_id=ID())
     events = List(GoogleEvent, calendar_id=ID())
     forecast = Field(OWMForecast, zip=Int(), country_code=String())
+    devices = List(Device, mac=ID())
 
     def resolve_task(root, info, task_id):
         return get_task(task_id)
@@ -66,6 +76,9 @@ class Query(ObjectType):
     def resolve_forecast(root, info, zip=DEFAULT_ZIP, country_code=DEFAULT_COUNTRY_CODE):
         return get_forecast(zip, country_code)
 
+    def resolve_devices(root, info, mac=None):
+        return get_devices(mac)
+
 
 class Mutation(ObjectType):
     create_task = CreateTask.Field()
@@ -73,6 +86,8 @@ class Mutation(ObjectType):
     update_task = UpdateTask.Field()
     delete_task = DeleteTask.Field()
     google_auth = GoogleAuth.Field()
+    device_on = DeviceOn.Field()
+    device_off = DeviceOff.Field()
 
 
 schema = Schema(query=Query, mutation=Mutation)

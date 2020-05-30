@@ -1,0 +1,22 @@
+ul.devices {
+    list-style-type: none;
+    padding-left: 0;
+}
+ul.devices li.device {
+    margin-left: 1rem;
+}
+
+.device-toggle {
+    cursor: pointer;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 1rem;
+}
+
+.device-toggle.on {
+    background: var(--on);
+}
+
+.device-toggle.off {
+    background: var(--off);
+}

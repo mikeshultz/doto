@@ -5,6 +5,8 @@ from dateutil import tz
 from dateutil.parser import parse
 
 ENABLE_PYTHON_37 = False
+MAC_STANDARD_PATTERN = r'^[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}$'
+MAC_WEMO_PATTERN = r'^[0-9A-F]{12}$'
 
 
 def any_falsey(iterable):
@@ -42,3 +44,18 @@ def is_date_or_none(v):
         return d.date()
 
     return None
+
+
+def normalize_mac_address(mac):
+    assert type(mac) == str, "Invalid mac type: {}".format(type(mac))
+    if re.match(MAC_STANDARD_PATTERN, mac):
+        return mac
+    elif re.match(MAC_WEMO_PATTERN, mac):
+        parts = []
+        for i in range(0, 12):
+            if i > 0 and i % 2 == 0:
+                parts.append(':')
+            parts.append(mac[i])
+        return ''.join(parts)
+    else:
+        raise ValueError("Unknown mac address format")

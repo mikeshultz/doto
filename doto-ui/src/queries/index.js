@@ -197,3 +197,29 @@ query Tags {
   tags
 }
 `
+
+export const GET_DEVICES = gql`
+query GetDevices($mac: ID) {
+  devices (mac: $mac) {
+    mac
+    name
+    state
+  }
+}
+`
+
+export const DEVICE_ON = gql`
+mutation DeviceOn($mac: ID!) {
+  deviceOn (mac: $mac) {
+    ok
+  }
+}
+`
+
+export const DEVICE_OFF = gql`
+mutation DeviceOff($mac: ID!) {
+  deviceOff (mac: $mac) {
+    ok
+  }
+}
+`

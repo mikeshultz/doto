@@ -14,6 +14,7 @@ from doto.data.calendar import (
     get_events,
 )
 from doto.data.weather import get_forecast
+from doto.data.devices import DeviceNotFound, get_devices, device_on, device_off, device_toggle
 
 
 @sync
