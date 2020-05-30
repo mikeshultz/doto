@@ -31,7 +31,6 @@ function Weather(props) {
 
   return (
     <div id="home">
-      <h1>Weather</h1>
       {loading ? (
         <div>Loading...</div>
       ) : (
