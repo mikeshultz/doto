@@ -35,7 +35,7 @@ def get_device(mac, devices=None):
     normal_mac = normalize_mac_address(mac)
 
     for dev in devices:
-        if normalize_mac_address(dev.mac) == normal_mac:
+        if dev.mac and normalize_mac_address(dev.mac) == normal_mac:
             return dev
 
     return None
