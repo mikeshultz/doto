@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from doto.utils import normalize_mac_address
 
 
-CACHE_DURATION = timedelta(seconds=900)
+CACHE_DURATION = timedelta(seconds=15)
 
 _device_cache = []
 _device_time = None
@@ -21,6 +21,15 @@ def discover_wemo():
 
     _device_cache = pywemo.discover_devices()
     _device_time = datetime.now()
+
+    if _device_time:
+        for i in reversed(range(0, len(_device_cache))):
+            if _device_cache[i].mac is None:
+                print('Error: Device {} is missing a mac address!'.format(
+                    _device_cache[i]
+                ))
+                # Useless to us
+                _device_cache.pop(i)
 
     return _device_cache
 
