@@ -464,7 +464,10 @@ class Device(ObjectType):
 
     def resolve_mac(parent, info):
         if parent.mac is None:
-            print('Error: device {} missing MAC address!'.format(parent.name))
+            print(
+                'Error: device {} missing MAC address!'.format(parent.name),
+                file=sys.stderr
+            )
             return None
         return normalize_mac_address(parent.mac)
 
