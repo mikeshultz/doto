@@ -30,7 +30,7 @@ function Device(props) {
   })
 
   if (deviceOnError || deviceOffError) {
-    console.errror(`Error: ${deviceOnError || deviceOffError}`)
+    console.error(`Error: ${deviceOnError || deviceOffError}`)
     return (
       <Error error={deviceOnError || deviceOffError} />
     )
