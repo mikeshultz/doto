@@ -7,7 +7,7 @@ import { GET_DEVICES } from '../queries'
 
 import './Devices.css'
 
-const DEVICE_REFETCH_INTERVAL = 1800000 // 30m
+const DEVICE_REFETCH_INTERVAL = 60000 // 1m
 
 function Devices(props) {
   const refreshInterval = useRef(null)
