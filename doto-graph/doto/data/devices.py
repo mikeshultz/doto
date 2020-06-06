@@ -17,7 +17,7 @@ def discover_wemo():
     """ Discover Wemo devices on the network """
     global _device_time, _device_cache
 
-    if _device_time and _device_time - datetime.now() <= CACHE_DURATION:
+    if _device_time and datetime.now() - _device_time <= CACHE_DURATION:
         return _device_cache
 
     cache = True
