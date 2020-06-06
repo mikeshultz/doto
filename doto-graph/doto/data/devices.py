@@ -20,19 +20,28 @@ def discover_wemo():
     if _device_time and _device_time - datetime.now() <= CACHE_DURATION:
         return _device_cache
 
+    cache = True
     _device_cache = pywemo.discover_devices()
     _device_time = datetime.now()
 
     if _device_time:
         for i in reversed(range(0, len(_device_cache))):
             if _device_cache[i].mac is None:
+                cache = False
                 print('Error: Device {} is missing a mac address!'.format(
                     _device_cache[i]
                 ), file=sys.stderr)
                 # Useless to us
                 _device_cache.pop(i)
 
-    return _device_cache
+    returned_devices = _device_cache
+
+    # Reset cache if we got invalid devices
+    if cache is False:
+        _device_cache = []
+        _device_time = None
+
+    return returned_devices
 
 
 def get_device(mac, devices=None):
