@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from doto.utils import normalize_mac_address
 
 
-CACHE_DURATION = timedelta(seconds=15)
+CACHE_DURATION = timedelta(minutes=5)
 
 _device_cache = []
 _device_time = None
