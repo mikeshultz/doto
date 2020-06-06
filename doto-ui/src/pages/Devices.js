@@ -1,22 +1,24 @@
 import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import get from 'lodash/get'
 
 import Device from '../components/Device'
 import { GET_DEVICES } from '../queries'
 
 import './Devices.css'
 
-const DEVICE_REFETCH_INTERVAL = 60000 // 1m
+const DEVICE_REFETCH_INTERVAL = 30000 // 30s
 
 function Devices(props) {
   const refreshInterval = useRef(null)
   const { loading, error, data, refetch } = useQuery(GET_DEVICES)
 
   useEffect(() => {
-    // refetch every 30min
+    // refetch every interval
     refreshInterval.current = setInterval(() => {
-      if (!loading) refetch()
+      if (!loading) {
+        console.debug('refreshing devices...')
+        refetch()
+      }
     }, DEVICE_REFETCH_INTERVAL)
 
     return () => {
