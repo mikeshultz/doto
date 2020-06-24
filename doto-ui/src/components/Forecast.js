@@ -7,24 +7,24 @@ import './Forecast.css'
 import arrow from '../static/arrow.png'
 
 // Scaled strangely on canvas
-const BASE_POINT_SIZE = 20
+const BASE_POINT_SIZE = 30
 
 function getTempColor(temp, alpha='0.5') {
   if (temp > 80) {
     //return '#FFD46D'
-    return `rgba(255,212,109,${alpha})`
+    return `rgba(255,112,35,${alpha})`
   } else if (temp > 60) {
     //return '#FFD46D'
-    return `rgba(255,212,109,${alpha})`
+    return `rgba(255,216,35,${alpha})`
   } else if (temp > 40) {
     //return '#9DFF6D'
-    return `rgba(157,255,109,${alpha})`
+    return `rgba(126,255,35,${alpha})`
   } else if (temp > 20) {
     //return '#6DFFED'
-    return `rgba(109,255,237,${alpha})`
+    return `rgba(35,255,200,${alpha})`
   } else if (temp > 0) {
     //return '#6DC8FF'
-    return `rgba(109,200,255,${alpha})`
+    return `rgba(35,200,255,${alpha})`
   }
   //return '#ffffff'
   return `rgba(255,255,255,${alpha})`
@@ -34,11 +34,8 @@ function Forecast(props) {
   const labels = []
   let maxAlpha = 0.5
   let pointCount = 0
-  let pointSum = 0
   let maxTemp = 0
   let minTemp = 0
-  let avgTemp = 0
-  let avgColor = getTempColor(avgTemp)
   const icons = []
   const temperatures = []
   const borderColors = []
@@ -52,7 +49,6 @@ function Forecast(props) {
 
     // Chart data
     pointCount += 1
-    pointSum += point.main.temp
     if (point.main.temp > maxTemp) maxTemp = point.main.temp
     if (point.main.temp < minTemp) minTemp = point.main.temp
     labels.push(time.local().format("ddd, hA"))
@@ -62,7 +58,7 @@ function Forecast(props) {
 
     // Wind images
     const windHeight = (point.wind.speed || 0) + BASE_POINT_SIZE
-    const windImage = new Image((windHeight / 3.75) + 1, windHeight)
+    const windImage = new Image((windHeight / 3.75) + 10, windHeight)
     windImage.src = arrow
     windIcons.push(windImage)
     pointRotations.push(point.wind.deg)
@@ -74,18 +70,12 @@ function Forecast(props) {
     }
     icons.push(pointImage)
 
-    //console.log('pressure point:', point.main.pressure)
-    //borderColors[0] = 'rgba(255,255,255,1)'
     const pointAlpha = maxAlpha - (pointCount * 0.01)
     backgroundColors.push(getTempColor(point.main.temp, pointAlpha))
   }
 
-  if (pointCount > 0) {
-    avgTemp = pointSum / pointCount
-    avgColor = getTempColor(avgTemp, '0.3')
-  }
-
   const annotations = []
+  const maxColor = getTempColor(maxTemp, '0.8')
 
   if (maxTemp > 90 && minTemp < 90) {
     annotations.push({
@@ -126,9 +116,6 @@ function Forecast(props) {
   useEffect(() => {
     const el = document.getElementById('forecastchart')
     const ctx = el.getContext('2d')
-    //const pointRadius = 10
-    /*const arrowImage = new Image(4, 15)
-    arrowImage.src = arrow*/
     // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
       type: 'line',
@@ -138,7 +125,7 @@ function Forecast(props) {
           label: 'Temperature',
           yAxisID: 'Temperature',
           data: temperatures,
-          backgroundColor: avgColor,
+          backgroundColor: maxColor,
           pointBorderColor: borderColors,
           pointBackgroundColor: borderColors,
           pointStyle: icons,
