@@ -455,7 +455,7 @@ class OWMForecast(ObjectType):
 class DeviceState(Enum):
     OFF = 0
     ON = 1
-    ON = 8  # Wemo on but load is off
+    ON_NO_LOAD = 8  # Wemo on but load is off
 
 
 class Device(ObjectType):

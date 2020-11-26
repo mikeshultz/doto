@@ -11,7 +11,7 @@ function DeviceStateToggle(props) {
   const { state, toggle } = props
 
   return (
-    <div className={`device-toggle ${state === 'ON' ? 'on' : 'off'}`} onClick={toggle}></div>
+    <div className={`device-toggle ${state.startsWith('ON') ? 'on' : 'off'}`} onClick={toggle}></div>
   )
 }
 
@@ -52,7 +52,7 @@ function Device(props) {
 
   function toggleDevice() {
     console.log('toggleDevice state:', state)
-    if (state === 'ON') {
+    if (state.startsWith('ON')) {
       return deviceOff()
     } else {
       return deviceOn()
