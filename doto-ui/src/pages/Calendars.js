@@ -1,3 +1,4 @@
+import some from 'lodash/some'
 import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
@@ -25,17 +26,13 @@ function Calendars(props) {
   })
 
   if (loading) return <p>Loading...</p>
-  if (error && !data && !error.message.includes('Unauthorized')) {
-    console.log('err', error)
-    console.log('typeof err', typeof error)
-    console.log('err.message', error.message)
-    return <p>
-      Error :(
-      {error.message}
+  if (error && !data && !some(['Authorization', 'Unauthorized'].map(m => error.message.includes(m)))) {
+    return <div className="error">
+      <p>Error :(</p>
+      <p>{error.message}</p>
       <button onClick={() => window.location.reload()}>Refresh</button>
-    </p>
+    </div>
   }
-
   let authNotices = null
   if (error && error.graphQLErrors) {
     authNotices = error.graphQLErrors.map(err => err.message)
@@ -43,6 +40,7 @@ function Calendars(props) {
 
   if (!data || !data.calendars) {
     return <div className="container">
+      <h3>Authorization Errors</h3>
       <div className={authNotices ? 'error' : 'hide'}>
         {authNotices}
       </div>
@@ -54,7 +52,6 @@ function Calendars(props) {
   }
 
   const calendars = data.calendars.map(cal => {
-    console.log('rendering calendar: ', cal.id)
     return <Calendar key={cal.id} calendar={cal} />
   })
 

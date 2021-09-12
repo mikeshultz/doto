@@ -3,12 +3,14 @@ import { useQuery } from '@apollo/react-hooks'
 
 import { GET_EVENTS } from '../queries'
 import { CALENDAR_REFETCH_INTERVAL } from '../const'
+import { authRedir } from '../utils'
 import Error from './Error'
 import Event from './Event'
 
 import './Calendar.css'
 
-function Calendar(props) {
+
+export default function Calendar(props) {
   const { id, summary } = props.calendar
   const refreshInterval = useRef(null)
   const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
@@ -31,6 +33,8 @@ function Calendar(props) {
 
   if (loading) return null
   if (error) {
+    const redir = authRedir(error)
+    if (redir) window.location = redir
     return <Error error={error} />
   }
 
@@ -49,5 +53,3 @@ function Calendar(props) {
     </div>
   )
 }
-
-export default Calendar

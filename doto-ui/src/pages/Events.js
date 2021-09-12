@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 
 import { GET_EVENTS } from '../queries'
 import { CALENDAR_REFETCH_INTERVAL, ONE_DAY } from '../const'
+import { authRedir } from '../utils'
 import Event from '../components/Event'
 import AddCalendarModal from '../components/AddCalendarModal'
 
@@ -52,15 +53,15 @@ function Events(props) {
   })
 
   if (loading) return <p>Loading...</p>
-  if (error && !data && !error.message.includes('Unauthorized')) {
-    console.log('err', error)
-    console.log('typeof err', typeof error)
-    console.log('err.message', error.message)
-    return <p>
-      Error :(
-      {error.message}
+  if (error && !data) {
+    const redir = authRedir(error)
+    if (redir) window.location = redir
+
+    return <div className="error">
+      <p>Error :(</p>
+      <p>{error.message}</p>
       <button onClick={() => window.location.reload()}>Refresh</button>
-    </p>
+    </div>
   }
 
   let authNotices = null

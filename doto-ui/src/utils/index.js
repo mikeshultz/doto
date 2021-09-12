@@ -48,3 +48,18 @@ export async function rgbHash(v) {
   const hash = sha1(v)
   return `#${hash.slice(-6)}`
 }
+
+/**
+ * Look for a Google auth redirect in a given error.  Return the URL if found.
+ *
+ * @param error {Error} Error to examine
+ * @returns {string?} url
+ */
+export function authRedir(error) {
+  const errString = error.toString()
+
+  if (errString.includes('Authorization required')) {
+    return errString.slice(errString.indexOf('http'))
+  }
+  return null
+}
