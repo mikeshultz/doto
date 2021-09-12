@@ -6,6 +6,7 @@ from caldav.lib.error import AuthorizationError
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
+from google.auth.exceptions import RefreshError
 from googleapiclient.discovery import build
 from requests.auth import AuthBase
 
@@ -78,10 +79,17 @@ def load_client_secret(fname='client_secret.json', confd=CONFIG_DIR):
 
 def load_credentials(fname='apicreds.json', confd=CONFIG_DIR):
     global TOKEN_CACHE
+
     config_dir_init(confd)
-    TOKEN_CACHE = load_json_file(confd.joinpath(fname))
+
+    try:
+        TOKEN_CACHE = load_json_file(confd.joinpath(fname))
+    except FileNotFoundError:
+        pass
+
     if TOKEN_CACHE is None:
         TOKEN_CACHE = {}
+
     return TOKEN_CACHE
 
 
@@ -239,9 +247,12 @@ def get_calendars(calendar_id):
         TOKEN_CACHE[calendar_id] = credentials_to_dict(credentials)
         save_credentials()
     service = build('calendar', 'v3', credentials=credentials)
-    calendars_result = service.calendarList().list(maxResults=100).execute()
-    calendars = calendars_result.get('items', [])
-    return calendars
+    try:
+        calendars_result = service.calendarList().list(maxResults=100).execute()
+        calendars = calendars_result.get('items', [])
+        return calendars
+    except RefreshError as err:
+        return str(err)
 
 
 def get_events(calendar_id=None): #, user_id=None):
@@ -252,7 +263,6 @@ def get_events(calendar_id=None): #, user_id=None):
         load_credentials()
 
     if calendar_id is not None and calendar_id not in TOKEN_CACHE:
-        print('!!!! auth needs to be done')
         return authorize_user_step1(calendar_id)
 
     calendars = []
@@ -291,6 +301,7 @@ def get_events(calendar_id=None): #, user_id=None):
             singleEvents=True,
             orderBy='startTime'
         ).execute()
+
         events.extend(events_result.get('items', []))
 
     # Need to sort the events
