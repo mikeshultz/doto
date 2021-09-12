@@ -297,7 +297,7 @@ def get_events(calendar_id=None): #, user_id=None):
             calendarId=cal_id,
             timeMin=min_datetime,
             timeMax=max_datetime,
-            maxResults=10,
+            maxResults=25,
             singleEvents=True,
             orderBy='startTime'
         ).execute()
