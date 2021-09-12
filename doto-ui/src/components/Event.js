@@ -1,48 +1,14 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 
-import './Event.css'
+import { eventIsToday, eventIsTomorrow } from '../utils/date'
 
-const ONE_DAY = 86400000 // 24 hours
+import './Event.css'
 
 function nl2br(v) {
   return {
     __html: v ? v.replace(/\n/g, '<br />') : ''
   }
-}
-
-function sameDay(a, b) {
-  console.log(`sameDay(${a}, ${b})`)
-  if (!a || !b) return false
-  if (a.year() !== b.year()) return false
-  if (a.month() !== b.month()) return false
-  if (a.day() !== b.day()) return false
-  return true
-}
-
-function isToday(v) {
-  const now = moment()
-  return sameDay(now, v)
-}
-
-function eventIsToday({ start, end }) {
-  if (!start || !end) return false
-  const now = moment()
-  return (
-    isToday(start)
-    || isToday(end)
-    || now.isBetween(start, end)
-  )
-}
-
-function eventIsTomorrow({ start, end }) {
-  if (!start || !end) return false
-  const plus24 = moment(moment() + ONE_DAY)
-  return (
-    sameDay(plus24, start)
-    || sameDay(plus24, end)
-    || plus24.isBetween(start, end)
-  )
 }
 
 function Event(props) {

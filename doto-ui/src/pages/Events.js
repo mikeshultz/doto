@@ -2,39 +2,13 @@ import React, { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
 import { GET_EVENTS } from '../queries'
-import { CALENDAR_REFETCH_INTERVAL, ONE_DAY } from '../const'
+import { CALENDAR_REFETCH_INTERVAL } from '../const'
 import { authRedir } from '../utils'
+import { eventIsToday, eventIsTomorrow, eventIsFuture } from '../utils/date'
 import Event from '../components/Event'
 import AddCalendarModal from '../components/AddCalendarModal'
 
 import './Events.css'
-
-function toStringDate(v) {
-  let day
-  if (v instanceof Date) {
-    day = v
-  } else if (typeof v === 'number') {
-    day = new Date(v)
-  } else {
-    day = new Date(v.date ? v.date : v.datetime)
-  }
-  const y = day.getFullYear()
-  const m = String(day.getMonth()).padStart(2, '0')
-  const d = String(day.getDate()).padStart(2, '0')
-  return `${y}${m}${d}`
-}
-
-function dgt(a, b) {
-  return toStringDate(a) > toStringDate(b)
-}
-
-function dgte(a, b) {
-  return toStringDate(a) >= toStringDate(b)
-}
-
-function dlte(a, b) {
-  return toStringDate(a) <= toStringDate(b)
-}
 
 function Events(props) {
   const { modalState, setModalState } = props
@@ -81,16 +55,9 @@ function Events(props) {
     </div>
   }
 
-  const now = new Date()
-  const plus24 = +new Date() + ONE_DAY
-
-  const isToday = (v) => dlte(v.start, now) && dgte(v.end, now)
-  const isTomorrow = (v) => dlte(v.start, plus24) && dgte(v.end, plus24)
-  const isFuture = (v) => dgt(v.end, plus24)
-
-  const today = data.events.filter(ev => isToday(ev))
-  const tomorrow = data.events.filter(ev => isTomorrow(ev))
-  const future = data.events.filter(ev => isFuture(ev))
+  const today = data.events.filter(ev => eventIsToday(ev))
+  const tomorrow = data.events.filter(ev => eventIsTomorrow(ev))
+  const future = data.events.filter(ev => eventIsFuture(ev))
 
   const todaysEvents = today.map(ev => {
     console.log('today ev: ', ev.id)
