@@ -42,7 +42,6 @@ function Event(props) {
   useEffect(() => {
     // Update the "front now" string
     const tick = () => {
-      console.debug("tick.")
       setFromNow(startDateTime.fromNow())
     }
 
