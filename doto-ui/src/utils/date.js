@@ -40,7 +40,6 @@ export function dlte(a, b) {
 
 export function eventIsToday({ start, end }) {
   const now = new Date()
-  console.log('eventIsToday:', start, end)
   return dlte(start, now) && dgte(end, now)
 }
 

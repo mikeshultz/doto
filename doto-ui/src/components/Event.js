@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import moment from 'moment'
+import React, { useEffect, useRef, useState } from "react"
+import moment from "moment"
 
-import { eventIsToday, eventIsTomorrow } from '../utils/date'
+import { CALENDAR_DATE_TICK } from "../const"
+import { eventIsToday, eventIsTomorrow } from "../utils/date"
 
-import './Event.css'
+import "./Event.css"
 
 function nl2br(v) {
   return {
-    __html: v ? v.replace(/\n/g, '<br />') : ''
+    __html: v ? v.replace(/\n/g, "<br />") : "",
   }
 }
 
@@ -29,17 +30,35 @@ function Event(props) {
     recurringEventId,
     reminders,
   */
-  const {
-    summary,
-    description,
-    start,
-    end,
-  } = props.event
+  const { summary, description, start, end } = props.event
   const [expanded, setExpanded] = useState(false)
+  const [fromNow, setFromNow] = useState(false)
+  const tickInterval = useRef(null)
 
   const startDateTime = moment(start.datetime || start.date)
   const endDateTime = moment(end.datetime || end.date)
   const duration = moment.duration(endDateTime - startDateTime)
+
+  useEffect(() => {
+    // Update the "front now" string
+    const tick = () => {
+      console.debug("tick.")
+      setFromNow(startDateTime.fromNow())
+    }
+
+    // First render
+    tick()
+
+    // Tick interval
+    tickInterval.current = setInterval(() => {
+      tick()
+    }, CALENDAR_DATE_TICK)
+
+    return () => {
+      clearInterval(tickInterval.current)
+    }
+  }, [startDateTime])
+
   let durationString = `${duration.asMinutes()} minutes`
   if (duration.asSeconds() > 3600) {
     durationString = `${duration.asHours()} hours`
@@ -51,23 +70,28 @@ function Event(props) {
   const tomorrow = eventIsTomorrow({ start: startDateTime, end: endDateTime })
 
   const showRibbon = !!today || !!tomorrow
-  const ribbonText = today ? 'Today' : tomorrow ? 'Tomorrow' : ''
-  const ribbonColor = today ? 'extreme' : tomorrow ? 'high' : ''
+  const ribbonText = today ? "Today" : tomorrow ? "Tomorrow" : ""
+  const ribbonColor = today ? "extreme" : tomorrow ? "high" : ""
 
   return (
     <li className="event">
       <div onClick={() => setExpanded(!expanded)}>
-        <div className={`expand${expanded ? '' : ' collapsed'}`}></div>
-        <div className="when">{startDateTime.fromNow()} for {durationString}</div>
+        <div className={`expand${expanded ? "" : " collapsed"}`}></div>
+        <div className="when">
+          {fromNow} for {durationString}
+        </div>
         <div className="name">{summary}</div>
-        <div className={`ribbon${showRibbon ? '' : ' hide'}`}>
+        <div className={`ribbon${showRibbon ? "" : " hide"}`}>
           <div className="ribbon-text">{ribbonText}</div>
-          <div className={`inner ${ribbonColor ? ribbonColor : 'hide'}`} />
+          <div className={`inner ${ribbonColor ? ribbonColor : "hide"}`} />
         </div>
       </div>
-      <div className={`details${expanded ? '' : ' hide'}`}>
-          <div className="event-description" dangerouslySetInnerHTML={nl2br(description)} />
-          <div className="exact-when">{startDateTime.local().format()}</div>
+      <div className={`details${expanded ? "" : " hide"}`}>
+        <div
+          className="event-description"
+          dangerouslySetInnerHTML={nl2br(description)}
+        />
+        <div className="exact-when">{startDateTime.local().format()}</div>
       </div>
     </li>
   )
