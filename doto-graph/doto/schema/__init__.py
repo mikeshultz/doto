@@ -63,7 +63,7 @@ class Query(ObjectType):
                 raise Exception('Authorization required: {}'.format(returned))
             else:
                 calendars.extend(returned)
-
+        print('resolve_calendars calendars', calendars)
         # Keep getting duplicates with these calls for some reason
         return uniq(calendars, lambda o: o.get('id'))
 

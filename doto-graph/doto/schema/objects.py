@@ -2,9 +2,25 @@ import sys
 import arrow
 from datetime import datetime, timedelta
 from ics import Calendar as iCal
-from graphene import ID, ObjectType, String, Int, Date, DateTime, List, Float, Field, Boolean, Enum
+from graphene import (
+    ID,
+    ObjectType,
+    String,
+    Int,
+    Date,
+    DateTime,
+    List,
+    Float,
+    Field,
+    Boolean,
+    Enum,
+)
 from doto.data.weather import parse_owm_date
-from doto.utils import is_date_or_none, iso_datetime_or_none, normalize_mac_address
+from doto.utils import (
+    is_date_or_none,
+    iso_datetime_or_none,
+    normalize_mac_address,
+)
 
 
 class Task(ObjectType):
@@ -52,13 +68,13 @@ class GoogleUser(ObjectType):
     is_self = Boolean()
 
     def resolve_email(parent, info):
-        return parent.get('email')
+        return parent.get("email")
 
     def resolve_display_name(parent, info):
-        return parent.get('displayName')
+        return parent.get("displayName")
 
     def resolve_is_self(parent, info):
-        return parent.get('self')
+        return parent.get("self")
 
 
 class GoogleDate(ObjectType):
@@ -67,13 +83,13 @@ class GoogleDate(ObjectType):
     timezone = String()
 
     def resolve_date(parent, info):
-        return is_date_or_none(parent.get('date'))
+        return is_date_or_none(parent.get("date"))
 
     def resolve_datetime(parent, info):
-        return iso_datetime_or_none(parent.get('dateTime'))
+        return iso_datetime_or_none(parent.get("dateTime"))
 
     def resolve_timezone(parent, info):
-        return parent.get('timeZone')
+        return parent.get("timeZone")
 
 
 class GoogleRemindersOverrides(ObjectType):
@@ -81,10 +97,10 @@ class GoogleRemindersOverrides(ObjectType):
     minutes = Int()
 
     def resolve_method(parent, info):
-        return parent.get('method')
+        return parent.get("method")
 
     def resolve_minutes(parent, info):
-        return parent.get('minutes')
+        return parent.get("minutes")
 
 
 class GoogleReminders(ObjectType):
@@ -92,10 +108,10 @@ class GoogleReminders(ObjectType):
     overrides = List(GoogleRemindersOverrides)
 
     def resolve_use_default(parent, info):
-        return parent.get('useDefault')
+        return parent.get("useDefault")
 
     def resolve_overrides(parent, info):
-        return parent.get('overrides')
+        return parent.get("overrides")
 
 
 class GoogleEvent(ObjectType):
@@ -116,49 +132,49 @@ class GoogleEvent(ObjectType):
     reminders = Field(GoogleReminders)
 
     def resolve_id(parent, info):
-        return parent.get('id')
+        return parent.get("id")
 
     def resolve_status(parent, info):
-        return parent.get('status')
+        return parent.get("status")
 
     def resolve_created(parent, info):
-        return parent.get('created')
+        return parent.get("created")
 
     def resolve_updated(parent, info):
-        return parent.get('updated')
+        return parent.get("updated")
 
     def resolve_summary(parent, info):
-        return parent.get('summary')
+        return parent.get("summary")
 
     def resolve_description(parent, info):
-        return parent.get('description')
+        return parent.get("description")
 
     def resolve_location(parent, info):
-        return parent.get('location')
+        return parent.get("location")
 
     def resolve_color_id(parent, info):
-        return parent.get('colorId')
+        return parent.get("colorId")
 
     def resolve_creator(parent, info):
-        return parent.get('creator')
+        return parent.get("creator")
 
     def resolve_organizer(parent, info):
-        return parent.get('organizer')
+        return parent.get("organizer")
 
     def resolve_start(parent, info):
-        return parent.get('start')
+        return parent.get("start")
 
     def resolve_end(parent, info):
-        return parent.get('end')
+        return parent.get("end")
 
     def resolve_original_start_time(parent, info):
-        return parent.get('originalStartTime')
+        return parent.get("originalStartTime")
 
     def resolve_recurring_event_id(parent, info):
-        return parent.get('recurringEventId')
+        return parent.get("recurringEventId")
 
     def resolve_reminders(parent, info):
-        return parent.get('reminders')
+        return parent.get("reminders")
 
 
 class GoogleCalendar(ObjectType):
@@ -177,34 +193,34 @@ class GoogleCalendar(ObjectType):
     # notificationSettings
 
     def resolve_id(parent, info):
-        return parent.get('id')
+        return parent.get("id")
 
     def resolve_summary(parent, info):
-        return parent.get('summary')
+        return parent.get("summary")
 
     def resolve_description(parent, info):
-        return parent.get('description')
+        return parent.get("description")
 
     def resolve_timezone(parent, info):
-        return parent.get('timeZone')
+        return parent.get("timeZone")
 
     def resolve_color_id(parent, info):
-        return parent.get('colorId')
+        return parent.get("colorId")
 
     def resolve_background_color(parent, info):
-        return parent.get('backgroundColor')
+        return parent.get("backgroundColor")
 
     def resolve_foreground_color(parent, info):
-        return parent.get('foregroundColor')
+        return parent.get("foregroundColor")
 
     def resolve_selected(parent, info):
-        return parent.get('selected')
+        return parent.get("selected")
 
     def resolve_access_role(parent, info):
-        return parent.get('accessTole')
+        return parent.get("accessTole")
 
     def resolve_primary(parent, info):
-        return parent.get('primary')
+        return parent.get("primary")
 
 
 class Event(ObjectType):
@@ -314,10 +330,10 @@ class Coordinates(ObjectType):
     long = Float()
 
     def resolve_lat(parent, info):
-        return parent.get('lat')
+        return parent.get("lat")
 
     def resolve_long(parent, info):
-        return parent.get('long')
+        return parent.get("long")
 
 
 class OWMCity(ObjectType):
@@ -326,13 +342,13 @@ class OWMCity(ObjectType):
     country = String()
 
     def resolve_name(parent, info):
-        return parent.get('name')
+        return parent.get("name")
 
     def resolve_coord(parent, info):
-        return parent.get('coord')
+        return parent.get("coord")
 
     def resolve_country(parent, info):
-        return parent.get('country')
+        return parent.get("country")
 
 
 class OWMPointMain(ObjectType):
@@ -346,28 +362,28 @@ class OWMPointMain(ObjectType):
     temp_kf = Float()
 
     def resolve_temp(parent, info):
-        return parent.get('temp')
+        return parent.get("temp")
 
     def resolve_temp_min(parent, info):
-        return parent.get('temp_min')
+        return parent.get("temp_min")
 
     def resolve_temp_max(parent, info):
-        return parent.get('temp_max')
+        return parent.get("temp_max")
 
     def resolve_pressure(parent, info):
-        return parent.get('pressure')
+        return parent.get("pressure")
 
     def resolve_sea_level(parent, info):
-        return parent.get('sea_level')
+        return parent.get("sea_level")
 
     def resolve_grnd_level(parent, info):
-        return parent.get('grnd_level')
+        return parent.get("grnd_level")
 
     def resolve_humidity(parent, info):
-        return parent.get('humidity')
+        return parent.get("humidity")
 
     def resolve_temp_kf(parent, info):
-        return parent.get('temp_kf')
+        return parent.get("temp_kf")
 
 
 class OWMPointWeather(ObjectType):
@@ -377,20 +393,20 @@ class OWMPointWeather(ObjectType):
     icon = String()
 
     def resolve_main(parent, info):
-        return parent.get('main')
+        return parent.get("main")
 
     def resolve_description(parent, info):
-        return parent.get('description')
+        return parent.get("description")
 
     def resolve_icon(parent, info):
-        return parent.get('icon')
+        return parent.get("icon")
 
 
 class OWMPointClouds(ObjectType):
     all = String()
 
     def resolve_all(parent, info):
-        return parent.get('all')
+        return parent.get("all")
 
 
 class OWMPointWind(ObjectType):
@@ -398,10 +414,10 @@ class OWMPointWind(ObjectType):
     deg = Float()
 
     def resolve_speed(parent, info):
-        return parent.get('speed')
+        return parent.get("speed")
 
     def resolve_deg(parent, info):
-        return parent.get('deg')
+        return parent.get("deg")
 
 
 class OWMPointRain(ObjectType):
@@ -420,25 +436,25 @@ class OWMPoint(ObjectType):
     # sys = Feild()
 
     def resolve_dt(parent, info):
-        return parent.get('dt')
+        return parent.get("dt")
 
     def resolve_dt_txt(parent, info):
-        return parent.get('dt_txt')
+        return parent.get("dt_txt")
 
     def resolve_datetime(parent, info):
-        return parse_owm_date(parent.get('dt_txt'))
+        return parse_owm_date(parent.get("dt_txt"))
 
     def resolve_main(parent, info):
-        return parent.get('main')
+        return parent.get("main")
 
     def resolve_weather(parent, info):
-        return parent.get('weather')
+        return parent.get("weather")
 
     def resolve_clouds(parent, info):
-        return parent.get('clouds')
+        return parent.get("clouds")
 
     def resolve_wind(parent, info):
-        return parent.get('wind')
+        return parent.get("wind")
 
 
 class OWMForecast(ObjectType):
@@ -446,10 +462,10 @@ class OWMForecast(ObjectType):
     city = Field(OWMCity)
 
     def resolve_points(parent, info):
-        return parent.get('list')
+        return parent.get("list")
 
     def resolve_city(parent, info):
-        return parent.get('city')
+        return parent.get("city")
 
 
 class DeviceState(Enum):
@@ -466,8 +482,8 @@ class Device(ObjectType):
     def resolve_mac(parent, info):
         if parent.mac is None:
             print(
-                'Error: device {} missing MAC address!'.format(parent.name),
-                file=sys.stderr
+                "Error: device {} missing MAC address!".format(parent.name),
+                file=sys.stderr,
             )
             return None
         return normalize_mac_address(parent.mac)

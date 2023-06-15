@@ -23,7 +23,7 @@ def discover_wemo():
     cache = True
     _device_cache = pywemo.discover_devices()
     _device_time = datetime.now()
-
+    print('discover_wemo _device_cache:', _device_cache)
     if _device_time:
         for i in reversed(range(0, len(_device_cache))):
             if _device_cache[i].mac is None:
@@ -46,6 +46,7 @@ def discover_wemo():
 
 def get_device(mac, devices=None):
     """ Get a specific device """
+    print('get_device:', get_device)
     if not mac:
         return None
     if not devices:
@@ -55,6 +56,7 @@ def get_device(mac, devices=None):
 
     for dev in devices:
         if dev.mac and normalize_mac_address(dev.mac) == normal_mac:
+            print('get_device dev:', dev)
             return dev
 
     return None
