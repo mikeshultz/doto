@@ -1,4 +1,4 @@
-import sha1 from 'js-sha1'
+import sha1 from "js-sha1"
 
 /**
  * Get brightness of a hex color
@@ -9,12 +9,12 @@ import sha1 from 'js-sha1'
  * @returns {Number} luma
  */
 export function brightness(v) {
-  if (v.startsWith('#')) v = v.slice(1)
+  if (v.startsWith("#")) v = v.slice(1)
   const rgb = parseInt(v, 16)
   const r = (rgb >> 16) & 0xff
-  const g = (rgb >>  8) & 0xff
-  const b = (rgb >>  0) & 0xff
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+  const g = (rgb >> 8) & 0xff
+  const b = (rgb >> 0) & 0xff
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
 }
 
 /**
@@ -34,8 +34,8 @@ export function isLight(v) {
  * @returns {String} hex
  */
 export function buf2hex(buffer) {
-  const hashArray = Array.from(new Uint8Array(buffer));                     // convert buffer to byte array
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  const hashArray = Array.from(new Uint8Array(buffer)) // convert buffer to byte array
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("")
 }
 
 /**
@@ -58,8 +58,8 @@ export async function rgbHash(v) {
 export function authRedir(error) {
   const errString = error.toString()
 
-  if (errString.includes('Authorization required')) {
-    return errString.slice(errString.indexOf('http'))
+  if (errString.includes("Authorization required")) {
+    return errString.slice(errString.indexOf("http"))
   }
   return null
 }

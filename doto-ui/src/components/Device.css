@@ -1,38 +1,38 @@
 li.device {
-    position: relative;
-    border-color: var(--fg);
-    border-width: 3px;
-    border-style: solid;
-    border-radius: 1rem;
-    padding: 0;
-    /*padding: 0.5rem;*/
-    margin: 1rem;
-    line-height: 2rem;
-    font-size: 2rem;
-    overflow-x: none;
-    overflow-y: none;
-    /*overflow-y: hidden;*/
-    max-height: 15rem;
-    transition-property: max-height, border-width, padding;
-    transition-duration: 1s;
+  position: relative;
+  border-color: var(--fg);
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 1rem;
+  padding: 0;
+  /*padding: 0.5rem;*/
+  margin: 1rem;
+  line-height: 2rem;
+  font-size: 2rem;
+  overflow-x: none;
+  overflow-y: none;
+  /*overflow-y: hidden;*/
+  max-height: 15rem;
+  transition-property: max-height, border-width, padding;
+  transition-duration: 1s;
 }
 
 .device.extreme {
-    border-color: var(--extreme);
+  border-color: var(--extreme);
 }
 
 .device.high {
-    border-color: var(--high);
+  border-color: var(--high);
 }
 
 .device.normal {
-    border-color: var(--normal);
+  border-color: var(--normal);
 }
 
 .device.low {
-    border-color: var(--low);
+  border-color: var(--low);
 }
 
 .device-toggle {
-    float: right;
+  float: right;
 }

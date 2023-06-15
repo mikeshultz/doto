@@ -1,172 +1,181 @@
 :root {
-    --bg: #000000;
-    --bg-secondary: #333333;
-    --fg: #CCCCCC;
-    --extreme: #FFCBCF;
-    --high: #FFEDCB;
-    --normal: #E5FFCB;
-    --low: #CBFCFF;
-    --on: #6BFA85;
-    --off: #FA6D6B;
+  --bg: #000000;
+  --bg-secondary: #333333;
+  --fg: #cccccc;
+  --extreme: #ffcbcf;
+  --high: #ffedcb;
+  --normal: #e5ffcb;
+  --low: #cbfcff;
+  --on: #6bfa85;
+  --off: #fa6d6b;
 }
 
 body {
-    background: var(--bg);
-    color: var(--fg);
+  background: var(--bg);
+  color: var(--fg);
 }
 .App {
   padding: 0 2rem;
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
 button {
-    min-width: 150px;
-    height: 3rem;
+  min-width: 150px;
+  height: 3rem;
 }
 
 .button-group {
-    display: block;
-    clear: both;
+  display: block;
+  clear: both;
 }
 .button-group button {
-    display: inline-block;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px #cfcfcf solid;
+  display: inline-block;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px #cfcfcf solid;
 }
 .button-group button:first-of-type {
-    border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 5px;
 }
 .button-group button:last-of-type {
-    border-radius: 0 5px 5px 0;
+  border-radius: 0 5px 5px 0;
 }
 
 .field {
-    width: 100%;
-    min-height: 3rem;
+  width: 100%;
+  min-height: 3rem;
 }
 .field label {
-    clear: right;
-    display: block;
-    margin: 1rem 0;
-    font-size: 1.25rem;
+  clear: right;
+  display: block;
+  margin: 1rem 0;
+  font-size: 1.25rem;
 }
 .tagify,
 .field input,
 .field select,
 .field textarea {
-    font-size: 1.25rem;
-    color: var(--fg);
-    background: var(--bg-secondary);
-    border: 2px solid var(--low);
+  font-size: 1.25rem;
+  color: var(--fg);
+  background: var(--bg-secondary);
+  border: 2px solid var(--low);
 }
 .field input {
-    padding: 0.25rem;
+  padding: 0.25rem;
 }
 .field textarea {
-    width: 100%;
-    min-height: 5rem;
+  width: 100%;
+  min-height: 5rem;
 }
 
-.tagify {}
+.tagify {
+}
 .tagify span {
   /* this is pared with input.field */
 }
 
 button.save {
-    background: var(--normal);
+  background: var(--normal);
 }
 
 button.close {
-    background: var(--extreme);
+  background: var(--extreme);
 }
 
 div.error {
-    display: block;
-    background: #AA0000;
-    border-radius: 1rem;
-    padding: 1rem;
+  display: block;
+  background: #aa0000;
+  border-radius: 1rem;
+  padding: 1rem;
 }
 
 div.container {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .modal {
-    position: absolute;
-    left: calc(100vw / 2 - 250px);
-    top: 2rem;
-    margin: 0 auto;
-    padding: 1rem;
-    background: var(--bg);
-    min-height: 50%;
-    width: 500px;
-    border-radius: 1rem;
-    border: 3px var(--fg) solid;
+  position: absolute;
+  left: calc(100vw / 2 - 250px);
+  top: 2rem;
+  margin: 0 auto;
+  padding: 1rem;
+  background: var(--bg);
+  min-height: 50%;
+  width: 500px;
+  border-radius: 1rem;
+  border: 3px var(--fg) solid;
 }
 
 .modal .button-group {
-    margin: 1rem 0;;
+  margin: 1rem 0;
 }
 
 .cols {
-    overflow: auto;
+  overflow: auto;
 }
 .cols .col {
-    display: block;
-    float: left;
+  display: block;
+  float: left;
 }
 
 .cols .col.left,
 .cols .col.right {
-    max-width: 50%;
+  max-width: 50%;
 }
 
-.cols .col.left {}
-.cols .col.right {}
+.cols .col.left {
+}
+.cols .col.right {
+}
 
 .padding-1 {
-    padding: 0.5rem;
+  padding: 0.5rem;
 }
 
 .ribbon {
-    float: right;
-    overflow: hidden;
-    height: 2rem;
-    width: 20rem;
-    padding: 0;
-    margin: 0;
-    border-radius: 0 0.5rem 0 0;
+  float: right;
+  overflow: hidden;
+  height: 2rem;
+  width: 20rem;
+  padding: 0;
+  margin: 0;
+  border-radius: 0 0.5rem 0 0;
 }
 
 .ribbon .ribbon-text {
-    z-index: 1;
-    position: relative;
-    left: 2.5rem;
-    color: var(--bg);
+  z-index: 1;
+  position: relative;
+  left: 2.5rem;
+  color: var(--bg);
 }
 
-.ribbon .inner.extreme { background: var(--extreme); }
-.ribbon .inner.high { background: var(--high); }
-.ribbon .inner.normal { background: var(--normal); }
+.ribbon .inner.extreme {
+  background: var(--extreme);
+}
+.ribbon .inner.high {
+  background: var(--high);
+}
+.ribbon .inner.normal {
+  background: var(--normal);
+}
 
 .ribbon .inner {
-    /*background: #f00;
+  /*background: #f00;
     height: 3rem;
     width: 4rem;
     transform: rotateZ(45deg);
     position: relative;
     top: -1.5rem;
     right: 0rem;*/
-    background: #f00;
-    height: 20rem;
-    width: 40rem;
-    transform: rotateZ(45deg);
-    position: relative;
-    top: -11.5rem;
-    right: 5rem;
+  background: #f00;
+  height: 20rem;
+  width: 40rem;
+  transform: rotateZ(45deg);
+  position: relative;
+  top: -11.5rem;
+  right: 5rem;
 }

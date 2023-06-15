@@ -1,20 +1,20 @@
 .task {
-    position: relative;
-    border-color: var(--fg);
-    border-width: 3px;
-    border-style: solid;
-    border-radius: 1rem;
-    padding: 0;
-    /*padding: 0.5rem;*/
-    margin: 1rem;
-    line-height: 2rem;
-    font-size: 2rem;
-    overflow-x: none;
-    overflow-y: auto;
-    /*overflow-y: hidden;*/
-    max-height: 15rem;
-    transition-property: max-height, border-width, padding;
-    transition-duration: 1s;
+  position: relative;
+  border-color: var(--fg);
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 1rem;
+  padding: 0;
+  /*padding: 0.5rem;*/
+  margin: 1rem;
+  line-height: 2rem;
+  font-size: 2rem;
+  overflow-x: none;
+  overflow-y: auto;
+  /*overflow-y: hidden;*/
+  max-height: 15rem;
+  transition-property: max-height, border-width, padding;
+  transition-duration: 1s;
 }
 .task.completed:before,
 .task.deleted:before {
@@ -31,98 +31,99 @@
 }
 
 .squashed {
-    padding: 0;
-    border-width: 0;
-    max-height: 0;
-    overflow: hidden;
+  padding: 0;
+  border-width: 0;
+  max-height: 0;
+  overflow: hidden;
 }
 
 .task .details {
-    font-size: 1rem;
-    overflow-y: auto;
+  font-size: 1rem;
+  overflow-y: auto;
 }
-.task .details table {}
+.task .details table {
+}
 .task .details table tr {
-    display: block;
-    border-bottom: 1px var(--fg) solid;
+  display: block;
+  border-bottom: 1px var(--fg) solid;
 }
 .task .details table tr th {
-    width: 150px;
+  width: 150px;
 }
 
 .task .title {
-    display: inline-block;
-    height: 2rem;
+  display: inline-block;
+  height: 2rem;
 }
 
 .task .expand {
-    cursor: pointer;
-    position: relative;
-    height: 1rem;
-    width: 1rem;
-    display: inline-block;
-    padding-right: 1rem;
+  cursor: pointer;
+  position: relative;
+  height: 1rem;
+  width: 1rem;
+  display: inline-block;
+  padding-right: 1rem;
 }
 .task .expand:before,
 .task .expand:after {
-    background: var(--fg);
-    content: '';
-    height: 5px;
-    position: absolute;
-    left: 1rem;
-    top: 1rem;
-    width: 1rem;
-    transition: transform 500ms ease;
+  background: var(--fg);
+  content: "";
+  height: 5px;
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  width: 1rem;
+  transition: transform 500ms ease;
 }
 .task .expand:after {
-    transform-origin: center;
+  transform-origin: center;
 }
 .task .expand.collapsed:after {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 .task .expand.collapsed:before {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .task.extreme {
-    border-color: var(--extreme);
+  border-color: var(--extreme);
 }
 
 .task.high {
-    border-color: var(--high);
+  border-color: var(--high);
 }
 
 .task.normal {
-    border-color: var(--normal);
+  border-color: var(--normal);
 }
 
 .task.low {
-    border-color: var(--low);
+  border-color: var(--low);
 }
 
 .button-group button.edit {
-    background: var(--high);
+  background: var(--high);
 }
 .button-group button.delete {
-    background: var(--extreme);
+  background: var(--extreme);
 }
 .button-group button.complete {
-    background: var(--low);
+  background: var(--low);
 }
 
 .columns {
-    width: 100%;
+  width: 100%;
 }
 
 .columns .column {
-    float: left;
+  float: left;
 }
 
 .columns.three .column {
-    width: 30%;
-    margin-right: 1%;
+  width: 30%;
+  margin-right: 1%;
 }
 
 .columns .column .label {
-    margin-right: 1rem;
+  margin-right: 1rem;
 }

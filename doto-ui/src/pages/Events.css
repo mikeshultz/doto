@@ -1,15 +1,15 @@
 .events-container.today {
-    margin-bottom: 3rem;
+  margin-bottom: 3rem;
 }
 
 .events-container.today .event {
-    border-color: var(--extreme);
+  border-color: var(--extreme);
 }
 
 .events-container.tomorrow .event {
-    border-color: var(--high);
+  border-color: var(--high);
 }
 
 .events-container.future .event {
-    border-color: var(--fg);
+  border-color: var(--fg);
 }

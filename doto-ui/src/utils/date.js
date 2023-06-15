@@ -1,6 +1,6 @@
-import moment from 'moment'
+import moment from "moment"
 
-import { ONE_DAY } from '../const'
+import { ONE_DAY } from "../const"
 
 /**
  * Converts a date to a comparable number (e.g. 20210911)
@@ -12,7 +12,7 @@ function toComparableDate(v) {
   let date
   if (v instanceof Date) {
     date = v
-  } else if (typeof v === 'number') {
+  } else if (typeof v === "number") {
     date = new Date(v)
   } else if (v instanceof moment) {
     date = v.toDate()
@@ -23,7 +23,7 @@ function toComparableDate(v) {
   const m = date.getMonth()
   const d = date.getDate()
   // Don't forget, month is 0 indexed for whatever reason
-  return (y * 10000) + ((m + 1) * 100) + d
+  return y * 10000 + (m + 1) * 100 + d
 }
 
 export function dgt(a, b) {

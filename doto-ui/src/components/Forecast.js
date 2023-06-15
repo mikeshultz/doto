@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react'
-import moment from 'moment'
-import Chart from 'chart.js'
-import 'chartjs-plugin-annotation'
+import React, { useEffect } from "react"
+import moment from "moment"
+import Chart from "chart.js"
+import "chartjs-plugin-annotation"
 
-import './Forecast.css'
-import arrow from '../static/arrow.png'
+import "./Forecast.css"
+import arrow from "../static/arrow.png"
 
 // Scaled strangely on canvas
 const BASE_POINT_SIZE = 30
 
-function getTempColor(temp, alpha='0.5') {
+function getTempColor(temp, alpha = "0.5") {
   if (temp > 80) {
     //return '#FFD46D'
     return `rgba(255,112,35,${alpha})`
@@ -58,7 +58,7 @@ function Forecast(props) {
 
     // Wind images
     const windHeight = (point.wind.speed || 0) + BASE_POINT_SIZE
-    const windImage = new Image((windHeight / 3.75) + 10, windHeight)
+    const windImage = new Image(windHeight / 3.75 + 10, windHeight)
     windImage.src = arrow
     windIcons.push(windImage)
     pointRotations.push(point.wind.deg)
@@ -70,110 +70,111 @@ function Forecast(props) {
     }
     icons.push(pointImage)
 
-    const pointAlpha = maxAlpha - (pointCount * 0.01)
+    const pointAlpha = maxAlpha - pointCount * 0.01
     backgroundColors.push(getTempColor(point.main.temp, pointAlpha))
   }
 
   const annotations = []
-  const maxColor = getTempColor(maxTemp, '0.8')
+  const maxColor = getTempColor(maxTemp, "0.8")
 
   if (maxTemp > 90 && minTemp < 90) {
     annotations.push({
-      id: 'hot',
-      type: 'line',
-      mode: 'horizontal',
-      scaleID: 'Temperature',
+      id: "hot",
+      type: "line",
+      mode: "horizontal",
+      scaleID: "Temperature",
       value: 90,
-      borderColor: 'rgba(249, 107, 68, 0.25)',
+      borderColor: "rgba(249, 107, 68, 0.25)",
       borderWidth: 2,
     })
   }
 
   if (maxTemp > 32 && minTemp < 32) {
     annotations.push({
-      id: 'freezing-line',
-      type: 'line',
-      mode: 'horizontal',
-      scaleID: 'Temperature',
+      id: "freezing-line",
+      type: "line",
+      mode: "horizontal",
+      scaleID: "Temperature",
       value: 32,
-      borderColor: 'rgba(144, 245, 255, 0.25)',
+      borderColor: "rgba(144, 245, 255, 0.25)",
       borderWidth: 2,
     })
   }
 
   if (maxTemp > 0 && minTemp < 0) {
     annotations.push({
-      id: 'zero-line',
-      type: 'line',
-      mode: 'horizontal',
-      scaleID: 'Temperature',
+      id: "zero-line",
+      type: "line",
+      mode: "horizontal",
+      scaleID: "Temperature",
       value: 0,
-      borderColor: 'rgba(68, 185, 249, 0.25)',
+      borderColor: "rgba(68, 185, 249, 0.25)",
       borderWidth: 2,
     })
   }
 
   useEffect(() => {
-    const el = document.getElementById('forecastchart')
-    const ctx = el.getContext('2d')
+    const el = document.getElementById("forecastchart")
+    const ctx = el.getContext("2d")
     // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
-      type: 'line',
+      type: "line",
       data: {
         labels: labels,
-        datasets: [{
-          label: 'Temperature',
-          yAxisID: 'Temperature',
-          data: temperatures,
-          backgroundColor: maxColor,
-          pointBorderColor: borderColors,
-          pointBackgroundColor: borderColors,
-          pointStyle: icons,
-          pointRadius: 15,
-          borderWidth: 1
-        }, {
-          label: 'Pressure',
-          yAxisID: 'Pressure',
-          data: pressures,
-          borderColor: 'rgba(255, 255, 255, 0.75)',
-          pointRotation: pointRotations,
-          pointStyle: windIcons
-        }],
+        datasets: [
+          {
+            label: "Temperature",
+            yAxisID: "Temperature",
+            data: temperatures,
+            backgroundColor: maxColor,
+            pointBorderColor: borderColors,
+            pointBackgroundColor: borderColors,
+            pointStyle: icons,
+            pointRadius: 15,
+            borderWidth: 1,
+          },
+          {
+            label: "Pressure",
+            yAxisID: "Pressure",
+            data: pressures,
+            borderColor: "rgba(255, 255, 255, 0.75)",
+            pointRotation: pointRotations,
+            pointStyle: windIcons,
+          },
+        ],
       },
       options: {
         annotation: {
-          annotations
+          annotations,
         },
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           yAxes: [
             {
-              id: 'Temperature',
-              type: 'linear',
-              position: 'left',
+              id: "Temperature",
+              type: "linear",
+              position: "left",
               scalePositionLeft: true,
               min: 0,
-              max: 100
+              max: 100,
             },
             {
-              id: 'Pressure',
-              type: 'linear',
-              position: 'right',
+              id: "Pressure",
+              type: "linear",
+              position: "right",
               scalePositionLeft: false,
               min: 500,
-              max: 1090
-            }
-          ]
-        }
-      }
+              max: 1090,
+            },
+          ],
+        },
+      },
     })
   })
 
-  return (
-    <canvas id="forecastchart"></canvas>
-  )
+  return <canvas id="forecastchart"></canvas>
 }
 
 export default Forecast

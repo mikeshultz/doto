@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 function Field(props) {
   const { id, name, label, type, placeholder, value, onChange } = props
@@ -6,7 +6,7 @@ function Field(props) {
     <div className="field">
       <label htmlFor={name}>{label || name}</label>
       <input
-        type={type || 'text'}
+        type={type || "text"}
         name={name}
         id={id}
         placeholder={placeholder}

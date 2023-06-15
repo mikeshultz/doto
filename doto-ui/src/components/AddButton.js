@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react"
 
-import './AddButton.css'
+import "./AddButton.css"
 
 function AddButton(props) {
   return (
     <div className="AddButton" onClick={props.openModal}>
-        &#43;
+      &#43;
     </div>
   )
 }
