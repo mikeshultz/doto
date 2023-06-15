@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import React, { useEffect, useRef } from "react"
+import { useQuery } from "@apollo/client"
 
-import Device from '../components/Device'
-import { GET_DEVICES } from '../queries'
+import Device from "../components/Device"
+import { GET_DEVICES } from "../queries"
 
-import './Devices.css'
+import "./Devices.css"
 
 const DEVICE_REFETCH_INTERVAL = 30000 // 30s
 
@@ -16,7 +16,7 @@ function Devices(props) {
     // refetch every interval
     refreshInterval.current = setInterval(() => {
       if (!loading) {
-        console.debug('refreshing devices...')
+        console.debug("refreshing devices...")
         refetch()
       }
     }, DEVICE_REFETCH_INTERVAL)
@@ -35,21 +35,21 @@ function Devices(props) {
     return <div>Loading...</div>
   }
 
-  const devices = data.devices.sort((a, b) => {
-    const A = a && a.name ? a.name.toUpperCase() : ''
-    const B = b && b.name ? b.name.toUpperCase() : ''
-    if (A < B) return -1
-    if (A > B) return 1
-    return 0
-  }).map(d => {
-    return <Device key={d.mac} device={d} refetchDevices={refetch} />
-  })
+  const devices = data.devices
+    .sort((a, b) => {
+      const A = a && a.name ? a.name.toUpperCase() : ""
+      const B = b && b.name ? b.name.toUpperCase() : ""
+      if (A < B) return -1
+      if (A > B) return 1
+      return 0
+    })
+    .map((d) => {
+      return <Device key={d.mac} device={d} refetchDevices={refetch} />
+    })
 
   return (
     <div>
-      <ul className="devices">
-        {devices}
-      </ul>
+      <ul className="devices">{devices}</ul>
     </div>
   )
 }

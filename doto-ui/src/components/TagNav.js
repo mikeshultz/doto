@@ -1,8 +1,8 @@
-import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import React from "react"
+import { useQuery } from "@apollo/client"
 
-import { GET_TAGS } from '../queries'
-import Badge from './Badge'
+import { GET_TAGS } from "../queries"
+import Badge from "./Badge"
 
 function TagNav(props) {
   const { addFilter, clearFilter, currentFilter } = props
@@ -15,24 +15,29 @@ function TagNav(props) {
 
   function filterByTag(tag) {
     addFilter({
-      tag
+      tag,
     })
   }
 
-  const tagEls = data.tags.map(tag => <Badge key={tag} value={tag} onClick={() => filterByTag(tag)} />)
+  const tagEls = data.tags.map((tag) => (
+    <Badge key={tag} value={tag} onClick={() => filterByTag(tag)} />
+  ))
 
   if (currentFilter) {
     tagEls.push(
-      <Badge key="clear" value={'❌ Clear'} bgoverride="#cfcfcf"
-        onClick={() => { clearFilter(); refetch(); }} />
+      <Badge
+        key="clear"
+        value={"❌ Clear"}
+        bgoverride="#cfcfcf"
+        onClick={() => {
+          clearFilter()
+          refetch()
+        }}
+      />
     )
   }
 
-  return (
-    <ul id="tagnav">
-      {tagEls}
-    </ul>
-  )
+  return <ul id="tagnav">{tagEls}</ul>
 }
 
 export default TagNav

@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import get from 'lodash/get'
+import React, { useEffect, useRef } from "react"
+import { useQuery } from "@apollo/client"
+import get from "lodash/get"
 
-import Forecast from '../components/Forecast'
-import { GET_FORECAST } from '../queries'
+import Forecast from "../components/Forecast"
+import { GET_FORECAST } from "../queries"
 
-import './Weather.css'
+import "./Weather.css"
 
 const WEATHER_REFETCH_INTERVAL = 1800000 // 30m
 
@@ -34,7 +34,7 @@ function Weather(props) {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <Forecast points={get(data, 'forecast.points')}/>
+        <Forecast points={get(data, "forecast.points")} />
       )}
     </div>
   )

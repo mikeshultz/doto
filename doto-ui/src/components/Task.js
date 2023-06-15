@@ -1,16 +1,16 @@
-import moment from 'moment'
-import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import moment from "moment"
+import React, { useState, useEffect } from "react"
+import { useMutation } from "@apollo/client"
 
-import TagBadges from './TagBadges'
+import TagBadges from "./TagBadges"
 
-import { COMPLETE_TASK, DELETE_TASK } from '../queries'
+import { COMPLETE_TASK, DELETE_TASK } from "../queries"
 
-import './Task.css'
+import "./Task.css"
 
 function nltobr(v) {
-  if (!v) return {__html: ''}
-  return {__html: v.replace(/\n/g, '<br>')}
+  if (!v) return { __html: "" }
+  return { __html: v.replace(/\n/g, "<br>") }
 }
 
 function FormattedText(props) {
@@ -30,18 +30,19 @@ function Task(props) {
   const [task, setTask] = useState({})
   const [completeTask, { data: completeData }] = useMutation(COMPLETE_TASK, {
     variables: {
-      taskId: props.task.taskId
-    }
+      taskId: props.task.taskId,
+    },
   })
   const [deleteTask, { data: deleteData }] = useMutation(DELETE_TASK, {
     variables: {
-      taskId: props.task.taskId
-    }
+      taskId: props.task.taskId,
+    },
   })
   const [expanded, setExpanded] = useState(false)
   const [squashed, setSquashed] = useState(false)
 
-  const deletedTask = deleteData && deleteData.deleteTask ? deleteData.deleteTask.ok : null
+  const deletedTask =
+    deleteData && deleteData.deleteTask ? deleteData.deleteTask.ok : null
   const completedTask = completeData ? completeData.task : null
 
   useEffect(() => {
@@ -51,26 +52,34 @@ function Task(props) {
     })
   }, [givenTask]) //, completedTask])
 
-  const { taskId, priority, name, added, deadline, completed, notes, tags } = task
+  const { taskId, priority, name, added, deadline, completed, notes, tags } =
+    task
   const now = moment(new Date())
   const dead = deadline ? moment(deadline) : null
   const passed = !!dead && dead < now
   const soon = !!dead ? dead - now < ONE_DAY : false
   const near = !!dead ? dead - now < THREE_DAYS : false
-  if (!window.dates) window.dates = {
-    now: moment(new Date())
-  }
+  if (!window.dates)
+    window.dates = {
+      now: moment(new Date()),
+    }
   window.dates[taskId] = dead
 
-  let priorityClass = 'no-priority'
-  if (priority <= 40) priorityClass = 'low'
-  if (priority <= 30) priorityClass = 'normal'
-  if (priority <= 20) priorityClass = 'high'
-  if (priority <= 10) priorityClass = 'extreme'
+  let priorityClass = "no-priority"
+  if (priority <= 40) priorityClass = "low"
+  if (priority <= 30) priorityClass = "normal"
+  if (priority <= 20) priorityClass = "high"
+  if (priority <= 10) priorityClass = "extreme"
 
   const showRibbon = !!(soon || passed || near)
-  const ribbonColor = soon || passed ? 'extreme' : near ? 'high' : 'normal'
-  const ribbonText = passed ? 'Overdue' : soon ? 'Deadline today' : near ? '<3 days left' : ''
+  const ribbonColor = soon || passed ? "extreme" : near ? "high" : "normal"
+  const ribbonText = passed
+    ? "Overdue"
+    : soon
+    ? "Deadline today"
+    : near
+    ? "<3 days left"
+    : ""
 
   function completeSelf() {
     // Mutation
@@ -109,35 +118,47 @@ function Task(props) {
   }
 
   return (
-    <li className={`task ${priorityClass}${deletedTask ? ' deleted' : ''}${completedTask !== null ? ' completed' : ''}${squashed ? ' squashed' : ''}`}>
+    <li
+      className={`task ${priorityClass}${deletedTask ? " deleted" : ""}${
+        completedTask !== null ? " completed" : ""
+      }${squashed ? " squashed" : ""}`}
+    >
       <div onClick={() => setExpanded(!expanded)}>
-        <div className={`expand padding-1${expanded ? '' : ' collapsed'}`}></div>
+        <div
+          className={`expand padding-1${expanded ? "" : " collapsed"}`}
+        ></div>
         <div className="title padding-1">
           {name}
           <TagBadges tags={tags} />
         </div>
-        <div className={`ribbon${showRibbon ? '' : ' hide'}`}>
+        <div className={`ribbon${showRibbon ? "" : " hide"}`}>
           <div className="ribbon-text">{ribbonText}</div>
-          <div className={`inner ${ribbonColor ? ribbonColor : 'hide'}`} />
+          <div className={`inner ${ribbonColor ? ribbonColor : "hide"}`} />
         </div>
       </div>
-      <div className={`details${expanded ? '' : ' hide'}`}>
+      <div className={`details${expanded ? "" : " hide"}`}>
         <FormattedText text={notes} />
         <div className="columns three">
           <div className="column">
             <span className="label">Added:</span> {added}
           </div>
-          <div className={`column${soon ? ' extreme' : ''}`}>
-            <span className="label">Deadline:</span> {deadline || '-'}
+          <div className={`column${soon ? " extreme" : ""}`}>
+            <span className="label">Deadline:</span> {deadline || "-"}
           </div>
           <div className="column">
-            <span className="label">Completed:</span> {completed || '-'}
+            <span className="label">Completed:</span> {completed || "-"}
           </div>
         </div>
         <div className="button-group">
-          <button className="edit" onClick={() => props.taskModalState(taskId)}>Edit</button>
-          <button className="delete" onClick={deleteSelf}>Delete</button>
-          <button className="complete" onClick={completeSelf}>Complete</button>
+          <button className="edit" onClick={() => props.taskModalState(taskId)}>
+            Edit
+          </button>
+          <button className="delete" onClick={deleteSelf}>
+            Delete
+          </button>
+          <button className="complete" onClick={completeSelf}>
+            Complete
+          </button>
         </div>
       </div>
     </li>

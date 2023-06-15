@@ -1,39 +1,44 @@
-import React from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import React from "react"
+import { useMutation } from "@apollo/client"
 
-import { DEVICE_ON, DEVICE_OFF } from '../queries'
+import { DEVICE_ON, DEVICE_OFF } from "../queries"
 
-import Error from './Error'
+import Error from "./Error"
 
-import './Device.css'
+import "./Device.css"
 
 function DeviceStateToggle(props) {
   const { state, toggle } = props
 
   return (
-    <div className={`device-toggle ${state.startsWith('ON') ? 'on' : 'off'}`} onClick={toggle}></div>
+    <div
+      className={`device-toggle ${state.startsWith("ON") ? "on" : "off"}`}
+      onClick={toggle}
+    ></div>
   )
 }
 
 function Device(props) {
   const { device, refetchDevices } = props
   const { mac, name, state } = device
-  const [deviceOn, { data: deviceOnData, error: deviceOnError }] = useMutation(DEVICE_ON, {
-    variables: {
-      mac
+  const [deviceOn, { data: deviceOnData, error: deviceOnError }] = useMutation(
+    DEVICE_ON,
+    {
+      variables: {
+        mac,
+      },
     }
-  })
-  const [deviceOff, { data: deviceOffData, error: deviceOffError }] = useMutation(DEVICE_OFF, {
-    variables: {
-      mac
-    }
-  })
+  )
+  const [deviceOff, { data: deviceOffData, error: deviceOffError }] =
+    useMutation(DEVICE_OFF, {
+      variables: {
+        mac,
+      },
+    })
 
   if (deviceOnError || deviceOffError) {
     console.error(`Error: ${deviceOnError || deviceOffError}`)
-    return (
-      <Error error={deviceOnError || deviceOffError} />
-    )
+    return <Error error={deviceOnError || deviceOffError} />
   }
 
   if (deviceOffData) {
@@ -51,8 +56,8 @@ function Device(props) {
   }
 
   function toggleDevice() {
-    console.log('toggleDevice state:', state)
-    if (state.startsWith('ON')) {
+    console.log("toggleDevice state:", state)
+    if (state.startsWith("ON")) {
       return deviceOff()
     } else {
       return deviceOn()
