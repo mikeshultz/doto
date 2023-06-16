@@ -1,10 +1,30 @@
 import React, { useEffect } from "react"
 import moment from "moment"
-import Chart from "chart.js"
+import {
+  CategoryScale,
+  Chart,
+  Filler,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+} from "chart.js"
 import "chartjs-plugin-annotation"
 
 import "./Forecast.css"
 import arrow from "../static/arrow.png"
+
+Chart.register(
+  CategoryScale,
+  Filler,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement
+)
+
+const greater = (a, b) => (a > b ? a : b)
+const lesser = (a, b) => (a < b ? a : b)
 
 // Scaled strangely on canvas
 const BASE_POINT_SIZE = 30
@@ -34,6 +54,8 @@ function Forecast(props) {
   const labels = []
   let maxAlpha = 0.5
   let pointCount = 0
+  let maxPressure = 870 // lowest recorded baro
+  let minPressure = 1084 // highest recorded
   let maxTemp = 0
   let minTemp = 0
   const icons = []
@@ -44,13 +66,15 @@ function Forecast(props) {
   const windIcons = []
   const pressures = []
 
-  for (const point of props.points) {
+  for (const point of props?.points ?? []) {
     const time = moment.utc(point.datetime)
 
     // Chart data
     pointCount += 1
-    if (point.main.temp > maxTemp) maxTemp = point.main.temp
-    if (point.main.temp < minTemp) minTemp = point.main.temp
+    maxTemp = greater(maxTemp, point.main.temp)
+    minTemp = lesser(minTemp, point.main.temp)
+    maxPressure = greater(maxPressure, point.main.pressure)
+    minPressure = lesser(minPressure, point.main.pressure)
     labels.push(time.local().format("ddd, hA"))
     pressures.push(point.main.pressure)
     temperatures.push(point.main.temp)
@@ -116,7 +140,6 @@ function Forecast(props) {
   useEffect(() => {
     const el = document.getElementById("forecastchart")
     const ctx = el.getContext("2d")
-    // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
       type: "line",
       data: {
@@ -127,11 +150,11 @@ function Forecast(props) {
             yAxisID: "Temperature",
             data: temperatures,
             backgroundColor: maxColor,
+            borderColor: maxColor,
+            fill: "origin",
             pointBorderColor: borderColors,
-            pointBackgroundColor: borderColors,
             pointStyle: icons,
             pointRadius: 15,
-            borderWidth: 1,
           },
           {
             label: "Pressure",
@@ -147,31 +170,29 @@ function Forecast(props) {
         annotation: {
           annotations,
         },
-        legend: {
-          display: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
         },
         scales: {
-          yAxes: [
-            {
-              id: "Temperature",
-              type: "linear",
-              position: "left",
-              scalePositionLeft: true,
-              min: 0,
-              max: 100,
-            },
-            {
-              id: "Pressure",
-              type: "linear",
-              position: "right",
-              scalePositionLeft: false,
-              min: 500,
-              max: 1090,
-            },
-          ],
+          Temperature: {
+            position: "left",
+            min: 0,
+            max: 100,
+            type: "linear",
+          },
+          Pressure: {
+            type: "linear",
+            position: "right",
+            min: minPressure - BASE_POINT_SIZE / 5,
+            max: maxPressure + BASE_POINT_SIZE / 5,
+          },
         },
       },
     })
+
+    return () => chart.destroy()
   })
 
   return <canvas id="forecastchart"></canvas>
