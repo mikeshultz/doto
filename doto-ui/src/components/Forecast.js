@@ -27,7 +27,7 @@ const greater = (a, b) => (a > b ? a : b)
 const lesser = (a, b) => (a < b ? a : b)
 
 // Scaled strangely on canvas
-const BASE_POINT_SIZE = 30
+const BASE_POINT_SIZE = 20
 
 function getTempColor(temp, alpha = "0.5") {
   if (temp > 80) {
