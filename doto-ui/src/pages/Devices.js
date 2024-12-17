@@ -35,15 +35,13 @@ function Devices(props) {
     return <div>Loading...</div>
   }
 
-  const devices = data.devices
-    .sort((a, b) => {
+  const devices = Array.from(data.devices).sort((a, b) => {
       const A = a && a.name ? a.name.toUpperCase() : ""
       const B = b && b.name ? b.name.toUpperCase() : ""
       if (A < B) return -1
       if (A > B) return 1
       return 0
-    })
-    .map((d) => {
+    }).map((d) => {
       return <Device key={d.mac} device={d} refetchDevices={refetch} />
     })
 
