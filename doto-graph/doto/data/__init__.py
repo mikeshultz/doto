@@ -1,20 +1,32 @@
 from datetime import datetime
 
-from doto.data.conn import get_conn
-# noqa: F401
-from doto.data.utils import sync, datetime_to_timestamp, timestamp_to_datetime, date_json_to_db
-from doto.data.objects import Task
 # noqa: F401
 from doto.data.calendar import (
     authorize_user_step1,
     authorize_user_step2,
-    get_calendars,
     get_all_calendars,
     get_calendar_ids,
+    get_calendars,
     get_events,
 )
+from doto.data.conn import get_conn
+from doto.data.devices import (
+    DeviceNotFound,
+    device_off,
+    device_on,
+    device_toggle,
+    get_devices,
+)
+from doto.data.objects import Task
+
+# noqa: F401
+from doto.data.utils import (
+    date_json_to_db,
+    datetime_to_timestamp,
+    sync,
+    timestamp_to_datetime,
+)
 from doto.data.weather import get_forecast
-from doto.data.devices import DeviceNotFound, get_devices, device_on, device_off, device_toggle
 
 
 @sync
@@ -25,16 +37,18 @@ def get_tasks(task_filter):
     curs = conn.cursor()
 
     if task_filter:
-        print('$$$$$$$$$$$$filter: ', task_filter)
-        if 'tag' in task_filter:
-            tag_filter = '%{}%'.format(task_filter.get('tag'))
+        if "tag" in task_filter:
+            tag_filter = "%{}%".format(task_filter.get("tag"))
 
     if tag_filter is not None:
-        curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed, tags
+        curs.execute(
+            """SELECT task_id, priority, name, notes, added, deadline, completed, tags
             FROM task
             WHERE tags LIKE ?
             ORDER BY priority, deadline DESC, added DESC;
-            """, (tag_filter, ))
+            """,
+            (tag_filter,),
+        )
     else:
         curs.execute("""SELECT task_id, priority, name, notes, added, deadline, completed, tags
             FROM task
@@ -71,9 +85,12 @@ def get_tasks(task_filter):
 def get_task(task_id):
     conn = get_conn()
     curs = conn.cursor()
-    curs.execute("""SELECT task_id, priority, name, notes, added, deadline,
+    curs.execute(
+        """SELECT task_id, priority, name, notes, added, deadline,
         completed, tags
-        FROM task WHERE task_id=?;""", (task_id, ))
+        FROM task WHERE task_id=?;""",
+        (task_id,),
+    )
     row = curs.fetchone()
 
     if not row:
@@ -110,7 +127,7 @@ def get_task(task_id):
 
 @sync
 def create_task(priority, name, notes, tags, added=None, deadline=None, completed=None):
-    """ Create a teask """
+    """Create a teask"""
     conn = get_conn()
     curs = conn.cursor()
     added = datetime_to_timestamp(added or datetime.now())
@@ -121,11 +138,10 @@ def create_task(priority, name, notes, tags, added=None, deadline=None, complete
     curs.execute(
         """INSERT INTO task 
         (priority, name, notes, added, deadline, completed, tags)
-        VALUES (?, ?, ?, ?, ?, ?, ?);""", (
-            priority, name, notes, added, deadline, completed, tags
-        )
+        VALUES (?, ?, ?, ?, ?, ?, ?);""",
+        (priority, name, notes, added, deadline, completed, tags),
     )
-    print('create_task curs.rowcount', curs.rowcount)
+    print("create_task curs.rowcount", curs.rowcount)
     if curs.rowcount < 1:
         return None
 
@@ -133,35 +149,35 @@ def create_task(priority, name, notes, tags, added=None, deadline=None, complete
     # way out here.  Could maybe do some checks to make sure only one task_id
     # has been added(get max before and after INSERT) but all that will tell us
     # is if something *may have* gone wrong.
-    curs.execute('SELECT last_insert_rowid();')
+    curs.execute("SELECT last_insert_rowid();")
     res = curs.fetchone()
     return res[0]
 
 
 @sync
 def delete_task(task_id):
-    """ Create a teask """
+    """Create a teask"""
     conn = get_conn()
     curs = conn.cursor()
-    curs.execute('DELETE FROM task WHERE task_id=?;', (task_id,))
-    print('delete_task curs.rowcount', curs.rowcount)
+    curs.execute("DELETE FROM task WHERE task_id=?;", (task_id,))
+    print("delete_task curs.rowcount", curs.rowcount)
     return curs.rowcount > 0
 
 
 @sync
 def complete_task(task_id):
-    """ Create a teask """
+    """Create a teask"""
     when = datetime_to_timestamp(datetime.now())
     conn = get_conn()
     curs = conn.cursor()
-    curs.execute('UPDATE task SET completed = ? WHERE task_id=?;', (when, task_id))
-    print('complete_task curs.rowcount', curs.rowcount)
+    curs.execute("UPDATE task SET completed = ? WHERE task_id=?;", (when, task_id))
+    print("complete_task curs.rowcount", curs.rowcount)
     return curs.rowcount > 0
 
 
 @sync
 def update_task(task_id, priority, name, notes, tags, deadline=None, completed=None):
-    """ Create a teask """
+    """Create a teask"""
     conn = get_conn()
     curs = conn.cursor()
     if deadline:
@@ -176,11 +192,10 @@ def update_task(task_id, priority, name, notes, tags, deadline=None, completed=N
         deadline=?,
         completed=?,
         tags=?
-        WHERE task_id=?;""", (
-            priority, name, notes, deadline, completed, tags, task_id
-        )
+        WHERE task_id=?;""",
+        (priority, name, notes, deadline, completed, tags, task_id),
     )
-    print('update_task curs.rowcount', curs.rowcount)
+    print("update_task curs.rowcount", curs.rowcount)
     return curs.rowcount >= 1
 
 
@@ -190,11 +205,11 @@ def get_tags():
     conn = get_conn()
     curs = conn.cursor()
 
-    curs.execute("""SELECT tags FROM task;""")
+    curs.execute("""SELECT tags FROM task WHERE completed IS NULL;""")
 
     for row in curs.fetchall():
         row_tags = row[0]
-        for t in row_tags.split(','):
+        for t in row_tags.split(","):
             if t:
                 tags.add(t)
 
