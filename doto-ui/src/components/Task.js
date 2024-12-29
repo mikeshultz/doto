@@ -1,6 +1,6 @@
-import moment from "moment"
-import React, { useState, useEffect } from "react"
 import { useMutation } from "@apollo/client"
+import moment from "moment"
+import React, { useEffect, useState } from "react"
 
 import TagBadges from "./TagBadges"
 
@@ -56,9 +56,9 @@ function Task(props) {
     task
   const now = moment(new Date())
   const dead = deadline ? moment(deadline) : null
-  const passed = !!dead && dead < now
-  const soon = !!dead ? dead - now < ONE_DAY : false
-  const near = !!dead ? dead - now < THREE_DAYS : false
+  const passed = dead && dead < now
+  const soon = dead ? dead - now < ONE_DAY : false
+  const near = dead ? dead - now < THREE_DAYS : false
   if (!window.dates)
     window.dates = {
       now: moment(new Date()),
@@ -76,10 +76,10 @@ function Task(props) {
   const ribbonText = passed
     ? "Overdue"
     : soon
-    ? "Deadline today"
-    : near
-    ? "<3 days left"
-    : ""
+      ? "Deadline today"
+      : near
+        ? "<3 days left"
+        : ""
 
   function completeSelf() {
     // Mutation
@@ -119,9 +119,8 @@ function Task(props) {
 
   return (
     <li
-      className={`task ${priorityClass}${deletedTask ? " deleted" : ""}${
-        completedTask !== null ? " completed" : ""
-      }${squashed ? " squashed" : ""}`}
+      className={`task ${priorityClass}${deletedTask ? " deleted" : ""}${completedTask !== null ? " completed" : ""
+        }${squashed ? " squashed" : ""}`}
     >
       <div onClick={() => setExpanded(!expanded)}>
         <div
